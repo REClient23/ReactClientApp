@@ -2,5 +2,7 @@
     "appService.zipIgnorePattern": [
         "node_modules{,/**}",
         ".vscode{,/**}"
-    ]
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/d4044018-677b-4eea-9f3a-3f9ee9be20cf/resourceGroups/18apr2025/providers/Microsoft.Web/sites/CloudApp7",
+    "appService.deploySubpath": "."
 }

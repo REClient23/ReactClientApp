@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./LoginForm.css";
-import { Button, Label } from "@blueprintjs/core";
-
+import { Button, Label, Popover } from "@blueprintjs/core";
+import LeadsLandingPage from '../Leads/LeadsLandingPage';
 interface Credentials {
   email: string;
   password: string;
@@ -21,11 +21,11 @@ const LoginForm = () => {
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    console.log(credentials); // You can replace this with your login logic
+    e.preventDefault();    
   };
 
   return (
+    <Popover isOpen={true}>
     <div className="main-login-div">
     <form className="login-form" onSubmit={handleSubmit}>
       <h1 className="login-form__title">Sign in</h1>
@@ -69,6 +69,7 @@ const LoginForm = () => {
        <Button type="submit" intent="primary" icon="log-in" text="Sign in" />                    
     </form>
     </div>
+    </Popover>
   );
 };
 
