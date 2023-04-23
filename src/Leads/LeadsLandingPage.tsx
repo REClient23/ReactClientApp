@@ -4,7 +4,8 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { error } from "console";
-
+import CustomToolBar from "../CommonComponents/CustomToolBar";
+import {appBaseURL} from "../CommonComponents/ApplicationConstants";
 function LeadsLandingPage() {
   const gridRef = useRef();
   const [rowData, setRowData] = useState();
@@ -27,15 +28,24 @@ function LeadsLandingPage() {
     }),
     []
   );
-  useEffect(() => {
-    fetch("https://cloudapp7ds.azurewebsites.net/api/RemaxLeadMgmt")
+
+  const refreshData = () => {
+    fetch(appBaseURL+"/api/RemaxLeadMgmt")
       .then((result) => result.json())
       .then((rowData) => setRowData(rowData))
       .catch((error) => console.log(error));
-  }, []);
-  
+  };
+  useEffect(() => refreshData(), []);
+
+  const OnAddClickHandler = () => {};
+
   return (
     <div className="ag-theme-alpine" style={{ height: 900 }}>
+      <CustomToolBar
+        HeaderText="Leads"
+        OnAddClickHandler={OnAddClickHandler}
+        IsAddActionVisible={true}        
+      />
       <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}

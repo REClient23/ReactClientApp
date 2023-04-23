@@ -1,0 +1,1 @@
+export  const appBaseURL="https://cloudapp7ds.azurewebsites.net";

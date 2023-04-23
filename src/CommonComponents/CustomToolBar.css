@@ -1,0 +1,28 @@
+.toolbardiv
+{
+    background-color: rgb(73, 71, 71);
+    padding: 0%;
+    margin: 0;
+    height: 40px;
+}
+.customHeaderLabel {
+    float: left;    
+    font-weight: 400;
+    font-size: medium;
+    color: floralwhite;
+    margin-top: 5px;;
+    margin-left: 15px;
+    margin-bottom: 0px;
+  }
+
+  .toolbarbuttontrue
+  {
+    float: right; 
+    margin-top: 5px;
+    margin-right: 10px;
+
+  }
+  .toolbarbuttonfalse
+  {
+   visibility: collapse;
+  }
