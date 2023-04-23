@@ -20,6 +20,7 @@ import {
   ErrorToaser,
   SuccessToaser,
 } from "../CommonComponents/Toast";
+import { appBaseURL } from "../CommonComponents/ApplicationConstants";
 
 const AddNewCodeType = forwardRef<
   ParentToChildHandler,
@@ -76,7 +77,7 @@ const AddNewCodeType = forwardRef<
 
   function createPost() {
     axios
-      .post("https://localhost:7166/api/CodeTypes", newCodeType)
+      .post( appBaseURL+"/api/CodeTypes", newCodeType)
       .then((response) => {
         SuccessToaser("Saved Successfully");
       })
