@@ -16,18 +16,27 @@ import {
 } from "../CommonComponents/ParentToChildHandler";
 import { CodeTypes } from "./CodeTypesInterface";
 import { ErrorToaser } from "../CommonComponents/Toast";
+import DeleteCodeType from "./DeleteCodeType";
+import EditCodeType from "./EditCodeType";
 
 export default function CodeTypesLandingPage() {
-  const codetype: CodeTypes = { ShortCode: "", Description: "" };
+  
   const addChildRef = useRef<ParentToChildHandler>(null);
+  const deleteChildRef = useRef<ParentToChildHandler>(null);
+  const editChildRef= useRef<ParentToChildHandler>(null);
   const [rowData, setRowData] = useState<CodeTypes[]>();
   const [selectedRowData, setSelectedRowData] = useState<CodeTypes>();
   const gridRef = useRef<AgGridReact<CodeTypes>>(null);
+  const newdata= useState<CodeTypes>();
 
   function onSelectionChanged(event: any) {
     var selectedRows = event.api.getSelectedRows();
     if (selectedRows[0] != null) setSelectedRowData(selectedRows[0]);
-    else setSelectedRowData(codetype);
+    else{
+      const codetype: CodeTypes = { ShortCode: "", Description: "" };
+      setSelectedRowData(codetype);
+    }
+     
   }
 
   /*
@@ -55,7 +64,7 @@ export default function CodeTypesLandingPage() {
     }
     else
     {
-      
+      deleteChildRef.current?.Action();
     }
   };
   const onEditButtonClick = () => {
@@ -65,7 +74,7 @@ export default function CodeTypesLandingPage() {
     }
     else
     {
-      
+      editChildRef.current?.Action();
     }
   };
 
@@ -115,7 +124,9 @@ export default function CodeTypesLandingPage() {
         onSelectionChanged={onSelectionChanged}
         rowSelection="single"
       />
-      <AddNewCodeType ref={addChildRef} OnRefreshHandler={refreshData} />
+      <AddNewCodeType ref={addChildRef} OnRefreshHandler={refreshData}  codeTypes={selectedRowData} />
+      <DeleteCodeType ref={deleteChildRef} OnRefreshHandler={refreshData} codeTypes={selectedRowData} />
+      <EditCodeType ref={editChildRef} OnRefreshHandler={refreshData} codeTypes={selectedRowData} />
     </div>
   );
 }

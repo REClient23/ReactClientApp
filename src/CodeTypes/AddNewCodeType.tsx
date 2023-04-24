@@ -4,10 +4,7 @@ import {
   DialogBody,
   DialogFooter,
   FormGroup,
-  InputGroup,
-  Label,
-  Toast,
-  Toaster,
+  InputGroup  
 } from "@blueprintjs/core";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import {
@@ -33,7 +30,7 @@ const AddNewCodeType = forwardRef<
     },
   }));
 
-  const newCodetypedata = { shortcode: "", description: "" };
+  const newCodetypedata = { ShortCode: "", Description: "" };
   const [ispopupOpen, setIspopupOpen] = useState(false);
   const [newCodeType, setNewCodeType] = useState(newCodetypedata);
 
@@ -57,11 +54,11 @@ const AddNewCodeType = forwardRef<
     var isvalidData: boolean = true;
     var errorMessage: string = "";
 
-    if (newCodeType.shortcode === "") {
+    if (newCodeType.ShortCode === "") {
       errorMessage = "Please Enter Shortcode";
       isvalidData = false;
     }
-    if (newCodeType.description === "") {
+    if (newCodeType.Description === "") {
       if (errorMessage === "") errorMessage = "Please Enter Description";
       else errorMessage = errorMessage + " and Description";
       isvalidData = false;
@@ -107,19 +104,19 @@ const AddNewCodeType = forwardRef<
         <DialogBody>
           <FormGroup label="Short Code" labelFor="text-input" labelInfo="*">
             <InputGroup
-              id="shortcode"
+              id="ShortCode"
               placeholder="Enter Short Code"
               onChange={onChange}
-              value={newCodeType.shortcode}
+              value={newCodeType.ShortCode}
               required
             />
           </FormGroup>
           <FormGroup label="Description" labelFor="text-input" labelInfo="*">
             <InputGroup
-              id="description"
+              id="Description"
               placeholder="Enter Description"
               onChange={onChange}
-              value={newCodeType.description}
+              value={newCodeType.Description}
               required
             />
           </FormGroup>

@@ -1,7 +1,11 @@
+import { CodeTypes } from "../CodeTypes/CodeTypesInterface";
+
 export type ParentToChildHandler = {
     Action: () => void;
   };
   export type ParentChildHandlerProps = 
   {
-    OnRefreshHandler(): any;
+    codeTypes:any;   
+    OnRefreshHandler(): any; 
+    
   };
