@@ -4,6 +4,8 @@ import "./CustomToolBar.css";
 interface HeaderParams {
   HeaderText: string;
   OnAddClickHandler(): any;
+  OnEditClickHandler(): any;
+  OnDeleteClickHandler(): any;
   IsAddActionVisible: boolean;  
 }
 
@@ -15,12 +17,23 @@ const CustomToolBar = (params: HeaderParams) => {
   }
   return (
     <div className="toolbardiv">
-      <h3 className="customHeaderLabel"> {params.HeaderText}</h3>
+      <h3 className="customHeaderLabel"> {params.HeaderText}</h3>            
+      <Button
+        intent="primary"
+        icon="trash"
+        className={btnclass}        
+        onClick={params.OnDeleteClickHandler}
+      />
+      <Button
+        intent="primary"
+        icon="edit"
+        className={btnclass}     
+        onClick={params.OnEditClickHandler}
+      />
       <Button
         intent="primary"
         icon="add"
-        className={btnclass}
-        text={params.HeaderText}
+        className={btnclass}        
         onClick={params.OnAddClickHandler}
       />
     </div>

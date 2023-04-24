@@ -61,7 +61,6 @@ const AddNewCodeType = forwardRef<
       errorMessage = "Please Enter Shortcode";
       isvalidData = false;
     }
-
     if (newCodeType.description === "") {
       if (errorMessage === "") errorMessage = "Please Enter Description";
       else errorMessage = errorMessage + " and Description";

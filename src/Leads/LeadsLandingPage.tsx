@@ -22,9 +22,10 @@ function LeadsLandingPage() {
   ]);
   const defaultColDef = useMemo(
     () => ({
-      sortable: true,
+      sortable: true,      
       flex: 1,
       filter: true,
+      cellStyle: {textAlign:'left'}      
     }),
     []
   );
@@ -38,12 +39,16 @@ function LeadsLandingPage() {
   useEffect(() => refreshData(), []);
 
   const OnAddClickHandler = () => {};
+  const onDeleteButtonClick = () => {};
+  const onEditButtonClick = () => {};
 
   return (
     <div className="ag-theme-alpine" style={{ height: 900 }}>
       <CustomToolBar
         HeaderText="Leads"
         OnAddClickHandler={OnAddClickHandler}
+        OnEditClickHandler={onEditButtonClick}
+        OnDeleteClickHandler={onDeleteButtonClick}
         IsAddActionVisible={true}        
       />
       <AgGridReact
