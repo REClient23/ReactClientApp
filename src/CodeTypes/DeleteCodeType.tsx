@@ -96,6 +96,7 @@ var cuurentdata:CodeTypes={ShortCode:"",Description:""};
                     isOpen={ispopupOpen}                    
                     onCancel={OnCloseHandler}
                     onConfirm={OnSaveHandler}                    
+                    canEscapeKeyCancel={true}
                 >
                     <p>
                         "Are you sure you want to Delete code type" {cuurentdata.ShortCode} ?

@@ -109,6 +109,7 @@ const AddNewCodeType = forwardRef<
               onChange={onChange}
               value={newCodeType.ShortCode}
               required
+              autoFocus
             />
           </FormGroup>
           <FormGroup label="Description" labelFor="text-input" labelInfo="*">

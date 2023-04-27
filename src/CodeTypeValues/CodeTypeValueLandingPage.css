@@ -1,0 +1,16 @@
+.container-main {
+    display: flex;
+    flex-direction: row;
+    padding: 2px;
+  }
+  
+  .left-side {
+    width: 20%;
+    padding: 1px 1px 1px 2px;
+  }
+  
+  .right-side {
+    width: 80%;
+    padding: 2px 1px 1px 1px;
+  }
+   

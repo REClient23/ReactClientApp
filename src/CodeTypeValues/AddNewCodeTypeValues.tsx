@@ -6,7 +6,7 @@ import {
     FormGroup,
     InputGroup  
   } from "@blueprintjs/core";
-  import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+  import React, { forwardRef, useImperativeHandle, useState } from "react";
   import {
     ParentToChildHandler,
     ParentChildHandlerProps,
@@ -19,39 +19,33 @@ import {
   } from "../CommonComponents/Toast";
   import { appBaseURL } from "../CommonComponents/ApplicationConstants";
   
-  const EditCodeType = forwardRef<
+  const AddNewCodeTypeValues = forwardRef<
     ParentToChildHandler,
     ParentChildHandlerProps
   >((props, ref) => {
     useImperativeHandle(ref, () => ({
       Action() {        
-        console.log(props.codeTypes);
-        var newCodeTypedata={ShortCode:props.codeTypes.shortCode,Description:props.codeTypes.description}
-        setNewCodeType(newCodeTypedata);
-       console.log(newCodeTypedata)
-        Initialize(props);
-
+        console.log(props);
+        newCodetypedata.CodeType=props.codeTypes.codeTypeShortCode;
+        newCodetypedata.CodeTypeDesc=props.codeTypes.codeTypeDesc;
+        setNewCodeType(newCodetypedata);
+        Initialize();
       },
     }));
-        
-    
-    const newCodetypedata = { ShortCode: "Keshava", Description: "Keshava" };
+  
+    const newCodetypedata = { ShortCode: "", Description: "",CodeType:"", CodeTypeDesc:"" };
     const [ispopupOpen, setIspopupOpen] = useState(false);
     const [newCodeType, setNewCodeType] = useState(newCodetypedata);
   
-    const Initialize = (props:ParentChildHandlerProps) => {
-      setIspopupOpen(true);   
+    const Initialize = () => {
+      setIspopupOpen(true);
     };
-
-    
   
-    const OnCloseHandler = () => {
-      console.log("close add window");
+    const OnCloseHandler = () => {      
       setIspopupOpen(false);
     };
   
-    const OnSaveHandler = () => {
-      console.log("I am here");
+    const OnSaveHandler = () => {      
       if (Validate()) {
         createPost();
       }
@@ -79,9 +73,12 @@ import {
     };
   
     function createPost() {
-      console.log(newCodeType);
+
+       var ctv={shortCode:newCodeType.ShortCode,description:newCodeType.Description,codeTypeShortCode:newCodeType.CodeType}; 
+       console.log(ctv); 
+       console.log(newCodeType); 
       axios
-        .put( appBaseURL+"/api/CodeTypes", newCodeType)
+        .post( appBaseURL+"/api/CodeTypeValues", ctv)
         .then((response) => {
           SuccessToaser("Saved Successfully");
         })
@@ -103,19 +100,28 @@ import {
     return (
       <div>
         <Dialog
-          title="Edit Code Types"
-          icon="edit"
+          title="Add Code Types"
+          icon="add"
           isOpen={ispopupOpen}
           onClose={OnCloseHandler}
           canOutsideClickClose={false}
         >
           <DialogBody>
+          <FormGroup label="Code Type" labelFor="text-input" labelInfo="*">
+              <InputGroup
+                id="CodeType"                            
+                value={newCodeType.CodeTypeDesc}                
+                disabled
+              />
+            </FormGroup>
             <FormGroup label="Short Code" labelFor="text-input" labelInfo="*">
               <InputGroup
                 id="ShortCode"
-                placeholder="Enter Short Code"                
+                placeholder="Enter Short Code"
+                onChange={onChange}
                 value={newCodeType.ShortCode}
-                disabled
+                required
+                autoFocus
               />
             </FormGroup>
             <FormGroup label="Description" labelFor="text-input" labelInfo="*">
@@ -125,7 +131,6 @@ import {
                 onChange={onChange}
                 value={newCodeType.Description}
                 required
-                autoFocus
               />
             </FormGroup>
           </DialogBody>
@@ -147,5 +152,5 @@ import {
     );
   });
   
-  export default EditCodeType;
+  export default AddNewCodeTypeValues;
   

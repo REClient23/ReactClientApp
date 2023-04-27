@@ -13,6 +13,7 @@ import {
   Route,
   Outlet,
 } from "react-router-dom";
+import CodeTypeValueLandingPage from "./CodeTypeValues/CodeTypeValueLandingPage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Routes>          
           <Route path="/Leads" element={<LeadsLandingPage />} />
           <Route path="/CodeTypes" element={<CodeTypesLandingPage />} />
+          <Route path="/CodeTypeValue" element={<CodeTypeValueLandingPage />} />
         </Routes>
       </BrowserRouter>      
     </div>
