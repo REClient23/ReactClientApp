@@ -31,7 +31,7 @@ function LeadsLandingPage() {
   );
 
   const refreshData = () => {
-    fetch(appBaseURL+"/api/RemaxLeadMgmt")
+    fetch(appBaseURL+"/LeadMgmt")
       .then((result) => result.json())
       .then((rowData) => setRowData(rowData))
       .catch((error) => console.log(error));
