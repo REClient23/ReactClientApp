@@ -19,15 +19,17 @@ import {
   } from "../CommonComponents/Toast";
   import { appBaseURL } from "../CommonComponents/ApplicationConstants";
   
-  const AddNewCodeTypeValues = forwardRef<
+  const EditCodeTypeValues = forwardRef<
     ParentToChildHandler,
     ParentChildHandlerProps
   >((props, ref) => {
     useImperativeHandle(ref, () => ({
-      Action() {        
-        console.log(props);
+      Action() {                
         newCodetypedata.CodeType=props.codeTypes.codeTypeShortCode;
         newCodetypedata.CodeTypeDesc=props.codeTypes.codeTypeDesc;
+        newCodetypedata.ShortCode=props.codeTypes.shortCode;
+        newCodetypedata.Description=props.codeTypes.description;
+        
         setNewCodeType(newCodetypedata);
         Initialize();
       },
@@ -54,14 +56,9 @@ import {
     const Validate = () => {
       var isvalidData: boolean = true;
       var errorMessage: string = "";
-  
-      if (newCodeType.ShortCode === "") {
-        errorMessage = "Please Enter Shortcode";
-        isvalidData = false;
-      }
+       
       if (newCodeType.Description === "") {
-        if (errorMessage === "") errorMessage = "Please Enter Description";
-        else errorMessage = errorMessage + " and Description";
+         errorMessage = "Please Enter Description";        
         isvalidData = false;
       }
   
@@ -76,7 +73,7 @@ import {
 
        var ctv={shortCode:newCodeType.ShortCode,description:newCodeType.Description,codeTypeShortCode:newCodeType.CodeType};        
       axios
-        .post( appBaseURL+"/api/CodeTypeValues", ctv)
+        .put( appBaseURL+"/api/CodeTypeValues", ctv)
         .then((response) => {
           SuccessToaser("Saved Successfully");
         })
@@ -98,7 +95,7 @@ import {
     return (
       <div>
         <Dialog
-          title="Add Code Types Values"
+          title="Edit Code Type Values"
           icon="add"
           isOpen={ispopupOpen}
           onClose={OnCloseHandler}
@@ -117,9 +114,8 @@ import {
                 id="ShortCode"
                 placeholder="Enter Short Code"
                 onChange={onChange}
-                value={newCodeType.ShortCode}
-                required
-                autoFocus
+                value={newCodeType.ShortCode}                
+                disabled
               />
             </FormGroup>
             <FormGroup label="Description" labelFor="text-input" labelInfo="*">
@@ -129,6 +125,7 @@ import {
                 onChange={onChange}
                 value={newCodeType.Description}
                 required
+                autoFocus
               />
             </FormGroup>
           </DialogBody>
@@ -150,5 +147,5 @@ import {
     );
   });
   
-  export default AddNewCodeTypeValues;
+  export default EditCodeTypeValues;
   

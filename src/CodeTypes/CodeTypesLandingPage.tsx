@@ -58,7 +58,7 @@ export default function CodeTypesLandingPage() {
   };
 */
   const onDeleteButtonClick = () => {
-    if(selectedRowData?.ShortCode==="")
+    if(selectedRowData === undefined || selectedRowData?.ShortCode==="")
     {
       ErrorToaser("Please select a row to delete");
     }
@@ -68,7 +68,7 @@ export default function CodeTypesLandingPage() {
     }
   };
   const onEditButtonClick = () => {
-    if(selectedRowData?.ShortCode==="")
+    if( selectedRowData === undefined  || selectedRowData?.ShortCode==="")
     {
       ErrorToaser("Please select a row to edit");
     }
