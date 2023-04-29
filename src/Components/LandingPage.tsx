@@ -13,7 +13,7 @@ function LandingPage() {
           </div>
           <div className="bp4-navbar-group bp4-align-left">
             <Button icon="home" className="bp4-minimal">
-              <Link to={`Leads`}>Home</Link>
+              <Link to={`LeadManagement`}>Home</Link>
             </Button>
             <span className="bp4-navbar-divider"></span>
             <Button icon="rocket" className="bp4-minimal">

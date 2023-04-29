@@ -1,0 +1,9 @@
+.full-height-parent {
+    height: 100%;
+  }
+  .full-height-child {
+    height: 100%;
+  }
+  .full-height-First-child {    
+    padding: 5px;
+  }

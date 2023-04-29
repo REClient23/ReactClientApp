@@ -5,6 +5,7 @@ import LandingPage from "./Components/LandingPage";
 import LoginForm from "./Login/LoginForm";
 import LeadsLandingPage from "./Leads/LeadsLandingPage";
 import CodeTypesLandingPage from "./CodeTypes/CodeTypesLandingPage";
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -14,6 +15,7 @@ import {
   Outlet,
 } from "react-router-dom";
 import CodeTypeValueLandingPage from "./CodeTypeValues/CodeTypeValueLandingPage";
+import LeadManagmentLandingPage from "./LeadManagement/LeadManagmentLandingPage";
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
           <Route path="/Leads" element={<LeadsLandingPage />} />
           <Route path="/CodeTypes" element={<CodeTypesLandingPage />} />
           <Route path="/CodeTypeValue" element={<CodeTypeValueLandingPage />} />
+          <Route path="/LeadManagement" element={<LeadManagmentLandingPage />} />
         </Routes>
       </BrowserRouter>      
     </div>
