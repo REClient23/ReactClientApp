@@ -1,9 +1,13 @@
 .full-height-parent {
     height: 100%;
-  }
+      }
   .full-height-child {
     height: 100%;
   }
-  .full-height-First-child {    
-    padding: 5px;
+  .full-height-First-child {        
+    display: flex;
+    flex-direction: row;    
+    padding: 2px;    
   }
+
+ 

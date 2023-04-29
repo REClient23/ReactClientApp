@@ -4,10 +4,18 @@ import {
   DialogBody,
   DialogFooter,
   FormGroup,
+  Icon,
   InputGroup,
+  Switch,
   TextArea,
 } from "@blueprintjs/core";
-import React, { forwardRef, useImperativeHandle, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import {
   ParentToChildHandler,
   ParentChildHandlerProps,
@@ -26,36 +34,47 @@ import { ToggleButton } from "primereact/togglebutton";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "./AddLeadNotes.css";
+import { Console } from "console";
 
 const AddLeadNotes = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
   (props, ref) => {
     useImperativeHandle(ref, () => ({
       Action() {
-        setNewCodeType(newCodetypedata);
+        setNewNotes(newNotes);
         setisRecordingInProgress(false);
+        resetTranscript()
         Initialize();
       },
     }));
 
-    const newCodetypedata = { ShortCode: "", Description: "" };
+    const newNotes = { notes: "" };
     const [ispopupOpen, setIspopupOpen] = useState(false);
-    const [newCodeType, setNewCodeType] = useState(newCodetypedata);
+    const [currentNotes, setNewNotes] = useState(newNotes);
     const { transcript, listening, resetTranscript } = useSpeechRecognition();
     const [isRecordingInProgress, setisRecordingInProgress] = useState(false);
 
     const onRecordingChage = (e: any) => {
       setisRecordingInProgress(e.value);
-      if (e.value === true) {
-        SpeechRecognition.startListening({ continuous: true });
+      if (!isRecordingInProgress) {
+        setisRecordingInProgress(true);
+        SpeechRecognition.startListening({
+          continuous: true,
+          interimResults: true,
+        });
       } else {
+        setisRecordingInProgress(false);
         SpeechRecognition.stopListening();
+        newNotes.notes = transcript;
+        setNewNotes(newNotes);
       }
     };
+
     const Initialize = () => {
       setIspopupOpen(true);
     };
 
-    const OnCloseHandler = () => {
+    const OnCloseHandler = () => {      
+      onResetHandler();
       SpeechRecognition.stopListening();
       setIspopupOpen(false);
     };
@@ -74,16 +93,10 @@ const AddLeadNotes = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
       var isvalidData: boolean = true;
       var errorMessage: string = "";
 
-      if (newCodeType.ShortCode === "") {
-        errorMessage = "Please Enter Shortcode";
+      if (currentNotes.notes === "") {
+        errorMessage = "Please Enter Notes";
         isvalidData = false;
       }
-      if (newCodeType.Description === "") {
-        if (errorMessage === "") errorMessage = "Please Enter Description";
-        else errorMessage = errorMessage + " and Description";
-        isvalidData = false;
-      }
-
       if (!isvalidData) {
         ErrorToaser(errorMessage);
       }
@@ -92,8 +105,15 @@ const AddLeadNotes = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
     };
 
     function createPost() {
+
+      
+      var leadnotes={"id": 0,
+      "leadId": 1,      
+      "notes": currentNotes.notes,      
+      "createdBy": "string",      
+      "updatedBy": "string"}
       axios
-        .post(appBaseURL + "/api/CodeTypes", newCodeType)
+        .post(appBaseURL + "/api/LeadNotes", leadnotes)
         .then((response) => {
           SuccessToaser("Saved Successfully");
         })
@@ -105,11 +125,17 @@ const AddLeadNotes = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
         });
     }
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setNewCodeType((previousdata) => ({
+    const onTextChange = (e: any) => {
+      setNewNotes((previousdata) => ({
         ...previousdata,
         [e.target.id]: e.target.value,
       }));
+    };
+
+    const onResetHandler = () => {
+      resetTranscript();
+      newNotes.notes = "";
+      setNewNotes(newNotes);
     };
 
     return (
@@ -119,34 +145,61 @@ const AddLeadNotes = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
           icon="add"
           isOpen={ispopupOpen}
           onClose={OnCloseHandler}
-          canOutsideClickClose={false}     
-          style={{ height: "80vh",width:"100vh"}}    
+          canOutsideClickClose={false}
+          style={{ height: "80vh", width: "100vh" }}
         >
           <DialogBody>
             <div className="full-height-parent">
               <div className="full-height-First-child">
-                <ToggleButton
-                  onIcon="pi pi-stop-circle"
-                  offIcon="pi pi-microphone"
-                  onLabel="Stop"
-                  offLabel="Record"
-                  checked={isRecordingInProgress}
-                  onChange={onRecordingChage}
-                  style={{ height: "40px", paddingBottom: "5px",margin:"5px" }}
-                />
-                <Button
-                  intent="warning"
-                  icon="reset"
-                  text="Reset"
-                  onClick={resetTranscript}
-                  style={{                    
-                    height: "40px",                    
-                    margin:"5px"
-                  }}
-                />
+                <div>
+                  <div>
+                    <i
+                      className="pi pi-microphone"
+                      style={{
+                        fontSize: "1.5rem",
+                        paddingRight: "5px",
+                      }}
+                    ></i>
+                    <Switch
+                      checked={isRecordingInProgress}
+                      onChange={onRecordingChage}
+                      inline
+                      large
+                      style={{ paddingBottom: "5px", marginBottom: "5px" }}
+                    />
+                    <Button
+                      intent="warning"
+                      text="Reset"
+                      icon="reset"
+                      onClick={onResetHandler}
+                      style={{
+                        paddingBottom: "5px",
+                        marginBottom: "5px",
+                        textAlign: "right",
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
               <div className="full-height-child">
-                <TextArea value={transcript} className="bp4-input bp4-fill" style={{ height: "50vh",maxHeight:"50vh"}}/>
+                {isRecordingInProgress ? (
+                  <TextArea
+                    id="notes"
+                    value={transcript}
+                    className="bp4-input bp4-fill"
+                    style={{ height: "50vh", maxHeight: "50vh" }}
+                    onChange={onTextChange}
+                    readOnly
+                  />
+                ) : (
+                  <TextArea
+                    id="notes"
+                    value={currentNotes.notes}
+                    className="bp4-input bp4-fill"
+                    style={{ height: "50vh", maxHeight: "50vh" }}
+                    onChange={onTextChange}
+                  />
+                )}
               </div>
             </div>
           </DialogBody>
