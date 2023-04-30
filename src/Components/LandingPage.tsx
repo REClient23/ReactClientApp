@@ -12,8 +12,8 @@ function LandingPage() {
             <div className="bp4-navbar-heading">Remax Crystal</div>
           </div>
           <div className="bp4-navbar-group bp4-align-left">
-            <Button icon="home" className="bp4-minimal">
-              <Link to={`LeadManagement`}>Home</Link>
+            <Button icon="dashboard" className="bp4-minimal">
+              <Link to={`LeadManagement`}>Dashboard</Link>
             </Button>
             <span className="bp4-navbar-divider"></span>
             <Button icon="rocket" className="bp4-minimal">

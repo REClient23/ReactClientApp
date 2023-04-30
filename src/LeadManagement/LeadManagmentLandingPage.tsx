@@ -9,6 +9,7 @@ import { Dock } from 'primereact/dock';
 
 import "primereact/resources/primereact.min.css";
 import 'primeicons/primeicons.css';
+import LMDetailsPage from "./LMDetailsPage";
         
 function LeadManagmentLandingPage() {
   const addChildRef = useRef<ParentToChildHandler>(null);
@@ -44,6 +45,7 @@ function LeadManagmentLandingPage() {
   ];
   return (
     <div>
+      <LMDetailsPage/>
       <div style={{ position: "relative", height: "500px" }}>
         <SpeedDial
           model={items}
