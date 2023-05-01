@@ -5,12 +5,12 @@ import { ParentToChildHandler } from "../CommonComponents/ParentToChildHandler";
 import AddLeadNotes from "./AddLeadNotes";
 import { CodeTypeValues } from "../CodeTypeValues/CodeTypeValues";
 import { SpeedDial } from "primereact/speeddial";
-import { Dock } from 'primereact/dock';
-
+import { Dock } from "primereact/dock";
 import "primereact/resources/primereact.min.css";
-import 'primeicons/primeicons.css';
+import "primeicons/primeicons.css";
 import LMDetailsPage from "./LMDetailsPage";
-        
+import LeadNotesTimeLinePage from "./LeadNotesTimeLinePage";
+
 function LeadManagmentLandingPage() {
   const addChildRef = useRef<ParentToChildHandler>(null);
   const [selectedRowData, setSelectedRowData] = useState<CodeTypeValues>();
@@ -23,7 +23,9 @@ function LeadManagmentLandingPage() {
     {
       label: "Add",
       icon: "pi pi-plus",
-      command: () => {OnAddClickHandler()},
+      command: () => {
+        OnAddClickHandler();
+      },
     },
     {
       label: "Update",
@@ -43,18 +45,29 @@ function LeadManagmentLandingPage() {
       },
     },
   ];
-  return (
-    <div>
-      <LMDetailsPage/>
-      <div style={{ position: "relative", height: "500px" }}>
+  /*<div style={{ position: "relative", height: "500px" }}>
         <SpeedDial
           model={items}
           radius={120}
           type="quarter-circle"
           direction="down-left"
-          style={{ right: "2px", top: "5px" }}                             
-        />         
+          style={{ right: "2px", top: "5px" }}
+        />
+      </div> */
+  return (
+    <div>       
+      <div>       
+        <LMDetailsPage />
       </div>
+      <div style={{ position: "relative",zIndex:9999}}>
+          <SpeedDial
+            model={items}
+            radius={120}
+            type="quarter-circle"
+            direction="down-left"
+            style={{ right: "2px", top: "5px" }}
+          />
+        </div>
       <AddLeadNotes
         OnRefreshHandler={refreshData}
         ref={addChildRef}
