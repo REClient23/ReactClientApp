@@ -1,0 +1,46 @@
+.container-main {
+  display: flex;
+  flex-direction: row;
+  padding: 2px;
+}
+
+.left-side {
+  width: 20%;
+  padding: 1px 1px 1px 2px;
+}
+
+.right-side {
+  width: 80%;
+  padding: 2px 1px 1px 1px;
+}
+
+.h2-list {
+  font: bold;
+  font-weight: bolder;
+  font-size: large;
+}
+.circle {
+  display: inline-block;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid cornflowerblue;
+  text-align: center;
+  line-height: 45px;
+  background-color: cornflowerblue;
+}
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 5px;  
+}
+
+.column {
+  flex: 1;
+  text-align: left;
+}

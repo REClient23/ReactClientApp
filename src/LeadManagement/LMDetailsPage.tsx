@@ -18,14 +18,8 @@ import LeadNotesTimeLinePage from "./LeadNotesTimeLinePage";
 
 
 
-function LMDetailsPage() {
-  const EmberPanel: React.FC = () => (
-    <div>  
-      
-      <LeadNotesTimeLinePage  />      
-      
-    </div>
-  );  
+
+function LMDetailsPage() {  
   return (
     <div>
       <Navbar>        

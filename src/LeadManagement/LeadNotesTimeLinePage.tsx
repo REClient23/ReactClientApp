@@ -8,7 +8,7 @@ import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import { appBaseURL } from "../CommonComponents/ApplicationConstants";
 import { Tag } from 'primereact/tag';
-//import "./TimelineDemo.css";
+import "./LeadManagementPages.css";
 class TimelineEvent implements TimelineProps {
   status?: string;
   date?: string;
@@ -47,8 +47,8 @@ export default function LeadNotesTimeLinePage() {
 
   const customizedMarker = (item: TimelineEvent) => {
     return (
-      <span>
-        <i className={item.icon} style={{ fontSize: "2rem" }}></i>
+      <span className="circle">
+        <i className={item.icon} style={{ fontSize: "1.7rem" }}></i>
       </span>
     );
   };
@@ -72,14 +72,14 @@ export default function LeadNotesTimeLinePage() {
     );
   };
   return (
-    <div style={{ height: "80vh", width: "100vh" }}>
+    <div style={{ height:"100vh", overflowY: 'auto' }}>      
       <Timeline
         value={rowData}
         align="alternate"
         className="customized-timeline"
         marker={customizedMarker}
-        content={customizedContent}
-      />
+        content={customizedContent}       
+      />      
     </div>
   );
 }
