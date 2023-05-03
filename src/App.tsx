@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import LandingPage from "./Components/LandingPage";
@@ -16,21 +16,27 @@ import {
 } from "react-router-dom";
 import CodeTypeValueLandingPage from "./CodeTypeValues/CodeTypeValueLandingPage";
 import LeadManagmentLandingPage from "./LeadManagement/LeadManagmentLandingPage";
-
 function App() {
-  return (
-    <div className="App">      
+  const [loggedin, setLoggedin] = useState(false);
+  return loggedin ? (
+    <div className="App">
       <BrowserRouter>
-      <LandingPage/>
-      <Outlet/>
-        <Routes>          
+        <LandingPage />
+        <Outlet />
+        <Routes>
           <Route path="/Leads" element={<LeadsLandingPage />} />
           <Route path="/CodeTypes" element={<CodeTypesLandingPage />} />
           <Route path="/CodeTypeValue" element={<CodeTypeValueLandingPage />} />
-          <Route path="/LeadManagement" element={<LeadManagmentLandingPage />} />
+          <Route
+            path="/LeadManagement"
+            element={<LeadManagmentLandingPage />}
+          />
         </Routes>
-      </BrowserRouter>      
+      </BrowserRouter>
     </div>
+    
+  ) : (
+    <LoginForm  onLoginSuccessHandler={()=>setLoggedin(true)}/>
   );
 }
 

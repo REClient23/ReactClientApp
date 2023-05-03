@@ -7,7 +7,11 @@ interface Credentials {
   password: string;
 }
 
-const LoginForm = () => {
+interface onLoginSuccess {
+  onLoginSuccessHandler(): any;
+}
+
+const LoginForm = (params:onLoginSuccess) => {
   const [credentials, setCredentials] = useState<Credentials>({
     email: "",
     password: "",
@@ -22,10 +26,10 @@ const LoginForm = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();    
+    params.onLoginSuccessHandler();
   };
 
-  return (
-    <Popover isOpen={true}>
+  return (    
     <div className="main-login-div">
     <form className="login-form" onSubmit={handleSubmit}>
       <h1 className="login-form__title">Sign in</h1>
@@ -69,7 +73,6 @@ const LoginForm = () => {
        <Button type="submit" intent="primary" icon="log-in" text="Sign in" />                    
     </form>
     </div>
-    </Popover>
   );
 };
 
