@@ -110,10 +110,12 @@ const AddLeadNotes = forwardRef<ParentToChildHandler, LeadManagementHandlerProps
 
       
       var leadnotes={"id": 0,
-      "leadId": currentNotes.leadId,      
+      "leadId": props.selectedLead.leadId,      
       "notes": currentNotes.notes,      
       "createdBy": "string",      
       "updatedBy": "string"}
+
+      console.log(leadnotes);
       axios
         .post(appBaseURL + "/api/LeadNotes", leadnotes)
         .then((response) => {
