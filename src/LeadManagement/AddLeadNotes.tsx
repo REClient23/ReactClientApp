@@ -19,6 +19,7 @@ import React, {
 import {
   ParentToChildHandler,
   ParentChildHandlerProps,
+  LeadManagementHandlerProps,
 } from "../CommonComponents/ParentToChildHandler";
 import axios from "axios";
 import {
@@ -36,10 +37,11 @@ import "primeicons/primeicons.css";
 import "./AddLeadNotes.css";
 import { Console } from "console";
 
-const AddLeadNotes = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
+const AddLeadNotes = forwardRef<ParentToChildHandler, LeadManagementHandlerProps>(
   (props, ref) => {
     useImperativeHandle(ref, () => ({
       Action() {
+        newNotes.leadId=props.selectedLead.leadId;
         setNewNotes(newNotes);
         setisRecordingInProgress(false);
         resetTranscript()
@@ -47,7 +49,7 @@ const AddLeadNotes = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
       },
     }));
 
-    const newNotes = { notes: "" };
+    const newNotes = { notes: "" ,leadId:""};
     const [ispopupOpen, setIspopupOpen] = useState(false);
     const [currentNotes, setNewNotes] = useState(newNotes);
     const { transcript, listening, resetTranscript } = useSpeechRecognition();
@@ -108,7 +110,7 @@ const AddLeadNotes = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
 
       
       var leadnotes={"id": 0,
-      "leadId": 1,      
+      "leadId": currentNotes.leadId,      
       "notes": currentNotes.notes,      
       "createdBy": "string",      
       "updatedBy": "string"}
@@ -117,8 +119,7 @@ const AddLeadNotes = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
         .then((response) => {
           SuccessToaser("Saved Successfully");
         })
-        .then((data) => setIspopupOpen(false))
-        .then((p) => props.OnRefreshHandler())
+        .then((data) => setIspopupOpen(false))        
         .catch((e) => {
           ErrorToaser(e.response.data.substring(0, 100));
           console.log(e.response);
@@ -141,7 +142,7 @@ const AddLeadNotes = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
     return (
       <div>
         <Dialog
-          title="Add Lead Notes"
+          title="Add Lead Notes " 
           icon="add"
           isOpen={ispopupOpen}
           onClose={OnCloseHandler}
@@ -217,7 +218,7 @@ const AddLeadNotes = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
                   text="Cancel"
                   onClick={OnCloseHandler}
                 />
-              </div>
+                </div>
             }
           />
         </Dialog>

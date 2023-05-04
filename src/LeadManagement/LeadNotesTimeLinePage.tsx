@@ -1,4 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, {
+  useMemo,
+  forwardRef,
+  useImperativeHandle,
+  useState,
+} from "react";
 import { Timeline, TimelineProps } from "primereact/timeline";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
@@ -7,8 +12,13 @@ import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import { appBaseURL } from "../CommonComponents/ApplicationConstants";
-import { Tag } from 'primereact/tag';
+import { Tag } from "primereact/tag";
 import "./LeadManagementPages.css";
+import Leads from "./Leads";
+import {
+  LeadManagementHandlerProps,
+  ParentToChildHandler,
+} from "../CommonComponents/ParentToChildHandler";
 class TimelineEvent implements TimelineProps {
   status?: string;
   date?: string;
@@ -16,34 +26,46 @@ class TimelineEvent implements TimelineProps {
   color?: string;
   image?: string;
   name?: string;
-  notes?:string;
+  notes?: string;
   constructor(date: string, name: string, notes: string) {
-    this.date=date;
+    this.date = date;
     this.name = name;
-    this.notes=notes;
-    this.icon="pi pi-comments";
+    this.notes = notes;
+    this.icon = "pi pi-comments";
   }
 }
 
-export default function LeadNotesTimeLinePage() {
+const LeadNotesTimeLinePage = forwardRef<
+  ParentToChildHandler,
+  LeadManagementHandlerProps
+>((props, ref) => {
+  useImperativeHandle(ref, () => ({
+    Action() {
+      console.log("In here leadnotes")
+      refreshCTVData();
+    },
+  }));
+  //const LeadNotesTimeLinePage=(param:Leads)=>
   const [rowData, setRowData] = useState<any[]>();
-  const refreshCTVData = () => {
-    fetch(appBaseURL + "/api/LeadNotes")
+  const refreshCTVData = () => {    
+    if(props!== undefined && props.selectedLead!== undefined && props.selectedLead.leadId!== undefined)
+    {      
+    fetch(appBaseURL + "/api/LeadNotes/" + `${props.selectedLead.leadId}`)
       .then((result) => result.json())
       .then((subrowData) => clientMap(subrowData))
       .catch((error) => console.log(error));
-  };
-  useMemo(() => refreshCTVData(), []);
-  const clientMap = (param:any[]) => {
-    if (rowData !== null) {      
-        const users= param.map(
-        (data: any) => new TimelineEvent(data.createdDateTime,data.createdBy,data.notes)        
-      );
-    setRowData(users);
     }
   };
-
-  
+  useMemo(() => refreshCTVData(), []);
+  const clientMap = (param: any[]) => {
+    if (rowData !== null) {
+      const users = param.map(
+        (data: any) =>
+          new TimelineEvent(data.createdDateTime, data.createdBy, data.notes)
+      );
+      setRowData(users);
+    }
+  };
 
   const customizedMarker = (item: TimelineEvent) => {
     return (
@@ -55,7 +77,7 @@ export default function LeadNotesTimeLinePage() {
 
   const customizedContent = (item: TimelineEvent) => {
     return (
-      <Card title={item.status} subTitle={item.date}>
+      <Card title={item.status} subTitle={item.date} style={{ margin: "10px" }}>
         {item.image && (
           <img
             src={`https://primefaces.org/cdn/primereact/images/product/${item.image}`}
@@ -64,22 +86,21 @@ export default function LeadNotesTimeLinePage() {
             className="shadow-1"
           />
         )}
-        <p>
-          {item.notes}
-        </p>
+        <p>{item.notes}</p>
         <Tag value={item.name}></Tag>
       </Card>
     );
   };
   return (
-    <div style={{ height:"100vh", overflowY: 'auto' }}>      
+    <div style={{ height: "80vh", overflowY: "auto", margin: "5px" }}>
       <Timeline
         value={rowData}
         align="alternate"
         className="customized-timeline"
         marker={customizedMarker}
-        content={customizedContent}       
-      />      
+        content={customizedContent}
+      />
     </div>
   );
-}
+});
+export default LeadNotesTimeLinePage;

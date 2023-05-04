@@ -7,5 +7,8 @@ export type ParentToChildHandler = {
   {
     codeTypes:any;   
     OnRefreshHandler(): any; 
-    
+  };
+  export type LeadManagementHandlerProps = 
+  {
+    selectedLead:any;       
   };

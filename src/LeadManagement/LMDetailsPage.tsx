@@ -7,30 +7,50 @@ import {
   Tab,
   Tabs,
 } from "@blueprintjs/core";
-import React, { useRef, useState } from "react";
+import React, {
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+  useState,
+} from "react";
 import "@blueprintjs/core/lib/css/blueprint.css";
-import { ParentToChildHandler } from "../CommonComponents/ParentToChildHandler";
+import {
+  LeadManagementHandlerProps,
+  ParentToChildHandler,
+} from "../CommonComponents/ParentToChildHandler";
 import AddLeadNotes from "./AddLeadNotes";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import LeadNotesTimeLinePage from "./LeadNotesTimeLinePage";
+import Leads from "./Leads";
 
-
-
-
-function LMDetailsPage() {  
+const LMDetailsPage = forwardRef<
+  ParentToChildHandler,
+  LeadManagementHandlerProps
+>((props, ref) => {
+  useImperativeHandle(ref, () => ({
+    Action() {      
+      addChildRef.current?.Action();
+    },
+  }));
+  const addChildRef = useRef<ParentToChildHandler>(null);
   return (
     <div>
-      <Navbar>        
+      <Navbar>
         <Navbar.Group align={Alignment.LEFT}>
-          <Tabs id="navbar"  fill={true}>
+          <Tabs id="navbar" fill={true}>
             <Tab id="Profile" title="Profile" icon="user" />
             <Tab
               id="Activity"
               title="Activity"
               icon="chat"
-              panel={<LeadNotesTimeLinePage />}
+              panel={
+                <LeadNotesTimeLinePage
+                  ref={addChildRef}
+                  selectedLead={props.selectedLead}
+                />
+              }
             ></Tab>
             <Tab
               id="Appointments"
@@ -53,6 +73,6 @@ function LMDetailsPage() {
       </Navbar>
     </div>
   );
-}
+});
 
 export default LMDetailsPage;

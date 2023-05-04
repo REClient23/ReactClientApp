@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import LandingPage from "./Components/LandingPage";
-import LoginForm from "./Login/LoginForm";
+
 import LeadsLandingPage from "./Leads/LeadsLandingPage";
 import CodeTypesLandingPage from "./CodeTypes/CodeTypesLandingPage";
 
@@ -16,6 +16,7 @@ import {
 } from "react-router-dom";
 import CodeTypeValueLandingPage from "./CodeTypeValues/CodeTypeValueLandingPage";
 import LeadManagmentLandingPage from "./LeadManagement/LeadManagmentLandingPage";
+import Login_Form from "./Login/Login_form";
 function App() {
   const [loggedin, setLoggedin] = useState(false);
   return loggedin ? (
@@ -36,7 +37,7 @@ function App() {
     </div>
     
   ) : (
-    <LoginForm  onLoginSuccessHandler={()=>setLoggedin(true)}/>
+    <Login_Form  onLoginSuccessHandler={()=>setLoggedin(true)}/>
   );
 }
 
