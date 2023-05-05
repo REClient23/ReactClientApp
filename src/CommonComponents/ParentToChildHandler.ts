@@ -1,4 +1,3 @@
-import { CodeTypes } from "../CodeTypes/CodeTypesInterface";
 
 export type ParentToChildHandler = {
     Action: () => void;
