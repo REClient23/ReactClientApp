@@ -1,7 +1,10 @@
 import { Button, Icon } from "@blueprintjs/core";
 import React, { useMemo, useRef, useState } from "react";
 import "@blueprintjs/core/lib/css/blueprint.css";
-import { ParentToChildHandler } from "../CommonComponents/ParentToChildHandler";
+import {
+  LeadManagementHandlerProps,
+  ParentToChildHandler,
+} from "../CommonComponents/ParentToChildHandler";
 import AddLeadNotes from "./AddLeadNotes";
 import { CodeTypeValues } from "../CodeTypeValues/CodeTypeValues";
 import { SpeedDial } from "primereact/speeddial";
@@ -18,9 +21,12 @@ import { Badge } from "primereact/badge";
 
 function LeadManagmentLandingPage() {
   const addChildRef = useRef<ParentToChildHandler>(null);
+  const notesChildRef = useRef<ParentToChildHandler>(null);
+  const [paramLeadManagementHandlerProps, setLeadManagementHandlerProps] =
+    useState<LeadManagementHandlerProps>();
   const [selectedCT, setSelectedCT] = useState<Leads>();
   const [rowData, setRowData] = useState<Leads[]>();
-
+  const objrowdata = { ...selectedCT };
   const refreshData = () => {};
   const getLeadsData = () => {
     fetch(appBaseURL + "/LeadMgmt")
@@ -28,10 +34,22 @@ function LeadManagmentLandingPage() {
       .then((rowData: Leads[]) => setRowData(rowData))
       .catch((error) => console.log(error));
   };
-  function onSelectionChanged(event: any) {
-    var selectedRows = event.api.getSelectedRows();
-    if (selectedRows[0] != null) {
-      setSelectedCT(selectedRows[0]);
+  function onSelectionChanged(e: any) {
+    var lead: Leads = {
+      leadId: e.value.leadId,
+      name: e.value.name,
+      budget: e.value.budget,
+      leadStatus: e.value.leadStatus,
+      phNumber: e.value.phNumber,
+    };
+
+    if (lead !== null) {
+      setSelectedCT(lead);
+      console.log(lead);
+      setTimeout(() => {
+        notesChildRef.current?.Action();
+      }, 1000);
+      
     } else {
     }
   }
@@ -81,11 +99,11 @@ function LeadManagmentLandingPage() {
         <div className="row">
           <div className="column">
             <span>
-            <Badge value="F" severity="info" />
-            <span> </span>
+              <Badge value="F" severity="info" />
+              <span> </span>
               <i className="pi pi-money-bill"></i>
               <span> </span>
-              <span>{option.budget}</span>             
+              <span>{option.budget}</span>
             </span>
           </div>
           <div className="column">2024-05-02 2 PM</div>
@@ -101,10 +119,11 @@ function LeadManagmentLandingPage() {
           optionLabel="name"
           options={rowData}
           itemTemplate={countryTemplate}
+          onChange={onSelectionChanged}
         />
       </div>
       <div className="right-side">
-        <LMDetailsPage />
+        <LMDetailsPage ref={notesChildRef} selectedLead={selectedCT} />
       </div>
       <div style={{ position: "relative", zIndex: 9999 }}>
         <SpeedDial
@@ -115,10 +134,9 @@ function LeadManagmentLandingPage() {
           style={{ right: "2px", top: "5px" }}
         />
       </div>
-      <AddLeadNotes
-        OnRefreshHandler={refreshData}
+      <AddLeadNotes        
         ref={addChildRef}
-        codeTypes={selectedCT}
+        selectedLead={selectedCT}
       />
     </div>
   );
