@@ -1,14 +1,23 @@
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
-import ReactDOM from "react-dom/client";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { error } from "console";
 import CustomToolBar from "../CommonComponents/CustomToolBar";
 import {appBaseURL} from "../CommonComponents/ApplicationConstants";
+import { ErrorToaser } from "../CommonComponents/Toast";
+import { Leads } from "./Leads";
+import { ParentToChildHandler } from "../CommonComponents/ParentToChildHandler";
+import EditLead from "./EditLead";
+import DeleteLeadValues from "./DeleteLeadTypeValues";
+import AddNewLeadValues from "./AddNewLead";
 function LeadsLandingPage() {
-  const gridRef = useRef();
+
   const [rowData, setRowData] = useState();
+  const addChildRef = useRef<ParentToChildHandler>(null);
+  const deleteChildRef = useRef<ParentToChildHandler>(null);
+  const editChildRef= useRef<ParentToChildHandler>(null);
+  const [selectedRowData, setSelectedRowData] = useState<Leads>();
+  const leads: Leads = { PhNumber: "", LeadStatus: "",Name:"", Budget:0, Criteria:"",LeadId:0, PreviousSchedule:"", NextSchedule:0 };
 
   const [columnDefs, setColumnDefs] = useState([
     { field: "leadId" },
@@ -38,10 +47,47 @@ function LeadsLandingPage() {
   };
   useEffect(() => refreshData(), []);
 
-  const OnAddClickHandler = () => {};
-  const onDeleteButtonClick = () => {};
-  const onEditButtonClick = () => {};
+  function onSelectionChanged(event: any) {
+    var selectedRows = event.api.getSelectedRows();
+    if (selectedRows[0] != null) setSelectedRowData(selectedRows[0]);
+    else{
+      console.log("Not selected anything.. Assigning null")
+      setSelectedRowData(leads);
+    }
+    console.log("Selected row is:")
+     console.log(selectedRows[0])
+  }
 
+
+  const onDeleteButtonClick = () => {
+    if(selectedRowData === undefined)
+    {
+      ErrorToaser("Please select a row to delete");
+    }
+    else
+    {
+      deleteChildRef.current?.Action();
+    }
+  };
+  const onEditButtonClick = () => {
+    if( selectedRowData === undefined)
+    {
+      ErrorToaser("Please select a row to edit");
+    }
+    else
+    {
+      editChildRef.current?.Action();
+    }
+  };
+  const OnAddClickHandler = () => {
+    if(selectedRowData===undefined){
+      setSelectedRowData(leads);
+      // ErrorToaser("Please select a Code Type to Add");
+      
+    }
+    addChildRef.current?.Action();
+    
+  };
   return (
     <div className="ag-theme-alpine" style={{ height: 900 }}>
       <CustomToolBar
@@ -55,7 +101,13 @@ function LeadsLandingPage() {
         rowData={rowData}
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
+        onSelectionChanged={onSelectionChanged}
+        rowSelection="single"
       />
+      <AddNewLeadValues ref={addChildRef} OnRefreshHandler={refreshData}  codeTypes={selectedRowData} />
+      <DeleteLeadValues ref={deleteChildRef} OnRefreshHandler={refreshData} codeTypes={selectedRowData} />
+      
+      <EditLead ref={editChildRef} OnRefreshHandler={refreshData} codeTypes={selectedRowData} />
     </div>
   );
 }
