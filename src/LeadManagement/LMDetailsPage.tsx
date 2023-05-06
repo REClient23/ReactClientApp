@@ -39,6 +39,7 @@ const LMDetailsPage = forwardRef<
   }));
   const addChildRef = useRef<ParentToChildHandler>(null);
   const profileChildRef = useRef<ParentToChildHandler>(null);
+  const scheduleChildRef = useRef<ParentToChildHandler>(null);
   return (
     <div>
       <Navbar>
@@ -74,7 +75,7 @@ const LMDetailsPage = forwardRef<
               tagProps={{ round: true, intent: "danger" }}
               panel={
                 <LeadSchedulesTimeLinePage
-                  ref={addChildRef}
+                  ref={scheduleChildRef}
                   selectedLead={props.selectedLead}
                 />
               }
