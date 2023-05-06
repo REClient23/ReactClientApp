@@ -35,6 +35,7 @@ const LMDetailsPage = forwardRef<
     Action() {
       addChildRef.current?.Action();
       profileChildRef.current?.Action();
+      scheduleChildRef.current?.Action();
     },
   }));
   const addChildRef = useRef<ParentToChildHandler>(null);

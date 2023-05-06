@@ -21,7 +21,6 @@ import { Badge } from "primereact/badge";
 import AddLeadSchedules from "./LeadsScheduleAppointment/AddLeadSchedules";
 
 function LeadManagmentLandingPage() {
-
   const addChildRef = useRef<ParentToChildHandler>(null);
   const notesChildRef = useRef<ParentToChildHandler>(null);
   const scheduleChildRef = useRef<ParentToChildHandler>(null);
@@ -48,11 +47,9 @@ function LeadManagmentLandingPage() {
 
     if (lead !== null) {
       setSelectedCT(lead);
-      console.log(lead);
       setTimeout(() => {
-        notesChildRef.current?.Action();
+        notesChildRef.current?.Action();        
       }, 1000);
-      
     } else {
     }
   }
@@ -75,7 +72,9 @@ function LeadManagmentLandingPage() {
     {
       label: "Update",
       icon: "pi pi-calendar-plus",
-      command: () => {OnScheduleClickHandler()},
+      command: () => {
+        OnScheduleClickHandler();
+      },
     },
     {
       label: "Delete",
@@ -126,6 +125,7 @@ function LeadManagmentLandingPage() {
           options={rowData}
           itemTemplate={countryTemplate}
           onChange={onSelectionChanged}
+          listStyle={{ maxHeight: "85vh" }}
         />
       </div>
       <div className="right-side">
@@ -140,16 +140,9 @@ function LeadManagmentLandingPage() {
           style={{ right: "2px", top: "5px" }}
         />
       </div>
-      <AddLeadNotes        
-        ref={addChildRef}
-        selectedLead={selectedCT}
-      />
+      <AddLeadNotes ref={addChildRef} selectedLead={selectedCT} />
 
-<AddLeadSchedules        
-        ref={scheduleChildRef}
-        selectedLead={selectedCT}
-      />
-
+      <AddLeadSchedules ref={scheduleChildRef} selectedLead={selectedCT} />
     </div>
   );
 }
