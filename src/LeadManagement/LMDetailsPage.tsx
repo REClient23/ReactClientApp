@@ -25,6 +25,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import LeadNotesTimeLinePage from "./LeadNotesTimeLinePage";
 import Leads from "./Leads";
 import LeadsProfileLandingPage from "./LeadsProfile/LeadsProfileLandingPage";
+import LeadSchedulesTimeLinePage from "./LeadsScheduleAppointment/LeadSchedulesTimelinePage";
 
 const LMDetailsPage = forwardRef<
   ParentToChildHandler,
@@ -71,6 +72,12 @@ const LMDetailsPage = forwardRef<
               icon="timeline-events"
               tagContent="2"
               tagProps={{ round: true, intent: "danger" }}
+              panel={
+                <LeadSchedulesTimeLinePage
+                  ref={addChildRef}
+                  selectedLead={props.selectedLead}
+                />
+              }
             />
             <Tab
               id="Properties"

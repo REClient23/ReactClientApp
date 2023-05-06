@@ -6,6 +6,7 @@ import {
   FormGroup,
   Icon,
   InputGroup,
+  Label,
   Switch,
   TextArea,
 } from "@blueprintjs/core";
@@ -38,6 +39,7 @@ import "primeicons/primeicons.css";
 import "./AddLeadSchedules.css";
 import { Console } from "console";
 import { Dropdown } from "primereact/dropdown";
+import { CodeTypeValues } from "../../CodeTypeValues/CodeTypeValues";
 const AddLeadSchedules = forwardRef<
   ParentToChildHandler,
   LeadManagementHandlerProps
@@ -51,20 +53,20 @@ const AddLeadSchedules = forwardRef<
       Initialize();
     },
   }));
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState<Date>();
+  const [minDate, setminDate] = useState<Date>(new Date());
   const newNotes = { notes: "", leadId: "" };
   const [ispopupOpen, setIspopupOpen] = useState(false);
   const [currentNotes, setNewNotes] = useState(newNotes);
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
   const [isRecordingInProgress, setisRecordingInProgress] = useState(false);
-  const [selectedCity, setSelectedCity] = useState(null);
-  const cities = [
-    { name: "New York", code: "NY" },
-    { name: "Rome", code: "RM" },
-    { name: "London", code: "LDN" },
-    { name: "Istanbul", code: "IST" },
-    { name: "Paris", code: "PRS" },
-  ];
+  const [selectedScheduleType, setScheduleType] = useState<CodeTypeValues>();
+  const [srcScheduleTypes, setSrcScheduleTypes] = useState<CodeTypeValues[]>();
+
+  const onDateChangeHandler = (e: any) => {
+    setDate(e.value);
+  };
+
   const onRecordingChage = (e: any) => {
     setisRecordingInProgress(e.value);
     if (!isRecordingInProgress) {
@@ -83,6 +85,7 @@ const AddLeadSchedules = forwardRef<
 
   const Initialize = () => {
     setIspopupOpen(true);
+    refreshCTVData("SCHEDULE_TYPE");
   };
 
   const OnCloseHandler = () => {
@@ -115,19 +118,24 @@ const AddLeadSchedules = forwardRef<
 
     return isvalidData;
   };
-
+  const options = { hour12: false };
   function createPost() {
     var leadnotes = {
-      id: 0,
+      scheduleId: 0,
+      scheduleTime: date ? date.toISOString() : undefined,
       leadId: props.selectedLead.leadId,
-      notes: currentNotes.notes,
-      createdBy: "string",
-      updatedBy: "string",
+      facility: 0,
+      scheduleType: selectedScheduleType?.shortCode,
+      scheduleNotes: currentNotes.notes,
+      createdDateTime: "2023-05-06T21:01:41.882Z",
+      createdBy: "SC_Admin",
+      updatedDateTime: "2023-05-06T21:01:41.882Z",
+      updatedBy: "2023-05-06T21:01:41.882Z",
     };
 
     console.log(leadnotes);
     axios
-      .post(appBaseURL + "/api/LeadNotes", leadnotes)
+      .post(appBaseURL + "/api/Schedule", leadnotes)
       .then((response) => {
         SuccessToaser("Saved Successfully");
       })
@@ -144,6 +152,12 @@ const AddLeadSchedules = forwardRef<
       [e.target.id]: e.target.value,
     }));
   };
+  const refreshCTVData = (ctShortCode: any) => {
+    fetch(appBaseURL + "/api/CodeTypeValues/" + `${ctShortCode}`)
+      .then((result) => result.json())
+      .then((subrowData: CodeTypeValues[]) => setSrcScheduleTypes(subrowData))
+      .catch((error) => console.log(error));
+  };
 
   const onResetHandler = () => {
     resetTranscript();
@@ -159,82 +173,87 @@ const AddLeadSchedules = forwardRef<
         isOpen={ispopupOpen}
         onClose={OnCloseHandler}
         canOutsideClickClose={false}
-        style={{ height: "80vh", width: "100vh" }}
+        style={{ width: "100vh" }}
       >
         <DialogBody>
-          <div className="container-main-schedule">
-            <div className="left-side-schedule">
-              <Dropdown
-              style={{ marginBottom:"5px"}}
-                value={selectedCity}
-                onChange={(e) => setSelectedCity(e.value)}
-                options={cities}
-                optionLabel="name"
-                editable
-                placeholder="Select Schedule Type"  
-                
-              />
+          <div className="containerschedules">
+            <div className="rowschedule">
+              <div>
+                <Dropdown
+                  value={selectedScheduleType}
+                  onChange={(e) => setScheduleType(e.value)}
+                  options={srcScheduleTypes}
+                  optionLabel="description"
+                  placeholder="Select Schedule Type"
+                  style={{ width: "70vh" }}
+                />
+              </div>
+            </div>
+            <div className="rowschedule">
               <Calendar
                 value={date}
-                onChange={(e: CalendarChangeEvent) => setDate("data")}
-                inline
+                onChange={onDateChangeHandler}
+                minDate={minDate}
                 showTime
-                hourFormat="12"                
+                hourFormat="12"
+                inline
+                style={{ width: "70vh" }}
+                footerTemplate={() => (
+                  <div> {date ? date.toLocaleString() : "select date"}</div>
+                )}
               />
             </div>
-            <div className="right-side-schedule">
-              <div className="full-height-parent">
-                <div className="full-height-First-child">
+            <div className="rowscheduleNotes">
+              <div>
+                <div>
                   <div>
-                    <div>
-                      <i
-                        className="pi pi-microphone"
-                        style={{
-                          fontSize: "1.5rem",
-                          paddingRight: "5px",
-                        }}
-                      ></i>
-                      <Switch
-                        checked={isRecordingInProgress}
-                        onChange={onRecordingChage}
-                        inline
-                        large
-                        style={{ paddingBottom: "5px", marginBottom: "5px" }}
-                      />
-                      <Button
-                        intent="warning"
-                        text="Reset"
-                        icon="reset"
-                        onClick={onResetHandler}
-                        style={{
-                          paddingBottom: "5px",
-                          marginBottom: "5px",
-                          textAlign: "right",
-                        }}
-                      />
-                    </div>
+                    <i
+                      className="pi pi-microphone"
+                      style={{
+                        fontSize: "1.5rem",
+                        paddingRight: "5px",
+                      }}
+                    ></i>
+                    <Switch
+                      checked={isRecordingInProgress}
+                      onChange={onRecordingChage}
+                      inline
+                      large
+                      style={{ paddingBottom: "5px", marginBottom: "5px" }}
+                    />
+                    <Button
+                      intent="warning"
+                      text="Reset"
+                      icon="reset"
+                      onClick={onResetHandler}
+                      style={{
+                        paddingBottom: "5px",
+                        marginBottom: "5px",
+                        textAlign: "right",
+                      }}
+                    />
                   </div>
                 </div>
-                <div className="full-height-child">
-                  {isRecordingInProgress ? (
-                    <TextArea
-                      id="notes"
-                      value={transcript}
-                      className="bp4-input bp4-fill"
-                      style={{ height: "50vh", maxHeight: "50vh" }}
-                      onChange={onTextChange}
-                      readOnly
-                    />
-                  ) : (
-                    <TextArea
-                      id="notes"
-                      value={currentNotes.notes}
-                      className="bp4-input bp4-fill"
-                      style={{ height: "56vh", maxHeight: "80vh" }}                      
-                      onChange={onTextChange}
-                    />
-                  )}
-                </div>
+              </div>
+              <div>
+                {isRecordingInProgress ? (
+                  <TextArea
+                    id="notes"
+                    value={transcript}
+                    className="bp4-input bp4-fill"
+                    onChange={onTextChange}
+                    readOnly
+                    style={{ height: "100px", maxHeight: "80vh" }}
+                  />
+                ) : (
+                  <TextArea
+                    id="notes"
+                    value={currentNotes.notes}
+                    className="bp4-input bp4-fill"
+                    style={{ height: "100px", maxHeight: "80vh" }}
+                    onChange={onTextChange}
+                  />
+                )}
               </div>
             </div>
           </div>
