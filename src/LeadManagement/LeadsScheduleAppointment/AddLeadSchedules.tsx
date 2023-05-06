@@ -1,0 +1,260 @@
+import {
+  Button,
+  Dialog,
+  DialogBody,
+  DialogFooter,
+  FormGroup,
+  Icon,
+  InputGroup,
+  Switch,
+  TextArea,
+} from "@blueprintjs/core";
+import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import {
+  ParentToChildHandler,
+  ParentChildHandlerProps,
+  LeadManagementHandlerProps,
+} from "../../CommonComponents/ParentToChildHandler";
+import axios from "axios";
+import {
+  AppToaster,
+  ErrorToaser,
+  SuccessToaser,
+} from "../../CommonComponents/Toast";
+import { appBaseURL } from "../../CommonComponents/ApplicationConstants";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
+import { ToggleButton } from "primereact/togglebutton";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import "./AddLeadSchedules.css";
+import { Console } from "console";
+import { Dropdown } from "primereact/dropdown";
+const AddLeadSchedules = forwardRef<
+  ParentToChildHandler,
+  LeadManagementHandlerProps
+>((props, ref) => {
+  useImperativeHandle(ref, () => ({
+    Action() {
+      newNotes.leadId = props.selectedLead.leadId;
+      setNewNotes(newNotes);
+      setisRecordingInProgress(false);
+      resetTranscript();
+      Initialize();
+    },
+  }));
+  const [date, setDate] = useState("");
+  const newNotes = { notes: "", leadId: "" };
+  const [ispopupOpen, setIspopupOpen] = useState(false);
+  const [currentNotes, setNewNotes] = useState(newNotes);
+  const { transcript, listening, resetTranscript } = useSpeechRecognition();
+  const [isRecordingInProgress, setisRecordingInProgress] = useState(false);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const cities = [
+    { name: "New York", code: "NY" },
+    { name: "Rome", code: "RM" },
+    { name: "London", code: "LDN" },
+    { name: "Istanbul", code: "IST" },
+    { name: "Paris", code: "PRS" },
+  ];
+  const onRecordingChage = (e: any) => {
+    setisRecordingInProgress(e.value);
+    if (!isRecordingInProgress) {
+      setisRecordingInProgress(true);
+      SpeechRecognition.startListening({
+        continuous: true,
+        interimResults: true,
+      });
+    } else {
+      setisRecordingInProgress(false);
+      SpeechRecognition.stopListening();
+      newNotes.notes = transcript;
+      setNewNotes(newNotes);
+    }
+  };
+
+  const Initialize = () => {
+    setIspopupOpen(true);
+  };
+
+  const OnCloseHandler = () => {
+    onResetHandler();
+    SpeechRecognition.stopListening();
+    setIspopupOpen(false);
+  };
+
+  const OnSaveHandler = () => {
+    if (isRecordingInProgress === false) {
+      if (Validate()) {
+        createPost();
+      }
+    } else {
+      ErrorToaser("Please stop recording below saving!!");
+    }
+  };
+
+  const Validate = () => {
+    var isvalidData: boolean = true;
+    var errorMessage: string = "";
+
+    if (currentNotes.notes === "") {
+      errorMessage = "Please Enter Notes";
+      isvalidData = false;
+    }
+    if (!isvalidData) {
+      ErrorToaser(errorMessage);
+    }
+
+    return isvalidData;
+  };
+
+  function createPost() {
+    var leadnotes = {
+      id: 0,
+      leadId: props.selectedLead.leadId,
+      notes: currentNotes.notes,
+      createdBy: "string",
+      updatedBy: "string",
+    };
+
+    console.log(leadnotes);
+    axios
+      .post(appBaseURL + "/api/LeadNotes", leadnotes)
+      .then((response) => {
+        SuccessToaser("Saved Successfully");
+      })
+      .then((data) => setIspopupOpen(false))
+      .catch((e) => {
+        ErrorToaser(e.response.data.substring(0, 100));
+        console.log(e.response);
+      });
+  }
+
+  const onTextChange = (e: any) => {
+    setNewNotes((previousdata) => ({
+      ...previousdata,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
+  const onResetHandler = () => {
+    resetTranscript();
+    newNotes.notes = "";
+    setNewNotes(newNotes);
+  };
+
+  return (
+    <div>
+      <Dialog
+        title="Add Lead Appointments "
+        icon="add"
+        isOpen={ispopupOpen}
+        onClose={OnCloseHandler}
+        canOutsideClickClose={false}
+        style={{ height: "80vh", width: "100vh" }}
+      >
+        <DialogBody>
+          <div className="container-main-schedule">
+            <div className="left-side-schedule">
+              <Dropdown
+              style={{ marginBottom:"5px"}}
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.value)}
+                options={cities}
+                optionLabel="name"
+                editable
+                placeholder="Select Schedule Type"  
+                
+              />
+              <Calendar
+                value={date}
+                onChange={(e: CalendarChangeEvent) => setDate("data")}
+                inline
+                showTime
+                hourFormat="12"                
+              />
+            </div>
+            <div className="right-side-schedule">
+              <div className="full-height-parent">
+                <div className="full-height-First-child">
+                  <div>
+                    <div>
+                      <i
+                        className="pi pi-microphone"
+                        style={{
+                          fontSize: "1.5rem",
+                          paddingRight: "5px",
+                        }}
+                      ></i>
+                      <Switch
+                        checked={isRecordingInProgress}
+                        onChange={onRecordingChage}
+                        inline
+                        large
+                        style={{ paddingBottom: "5px", marginBottom: "5px" }}
+                      />
+                      <Button
+                        intent="warning"
+                        text="Reset"
+                        icon="reset"
+                        onClick={onResetHandler}
+                        style={{
+                          paddingBottom: "5px",
+                          marginBottom: "5px",
+                          textAlign: "right",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="full-height-child">
+                  {isRecordingInProgress ? (
+                    <TextArea
+                      id="notes"
+                      value={transcript}
+                      className="bp4-input bp4-fill"
+                      style={{ height: "50vh", maxHeight: "50vh" }}
+                      onChange={onTextChange}
+                      readOnly
+                    />
+                  ) : (
+                    <TextArea
+                      id="notes"
+                      value={currentNotes.notes}
+                      className="bp4-input bp4-fill"
+                      style={{ height: "56vh", maxHeight: "80vh" }}                      
+                      onChange={onTextChange}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogBody>
+        <DialogFooter
+          actions={
+            <div>
+              <Button
+                type="submit"
+                intent="primary"
+                text="Save"
+                onClick={OnSaveHandler}
+              />
+              <Button intent="warning" text="Cancel" onClick={OnCloseHandler} />
+            </div>
+          }
+        />
+      </Dialog>
+    </div>
+  );
+});
+
+export default AddLeadSchedules;

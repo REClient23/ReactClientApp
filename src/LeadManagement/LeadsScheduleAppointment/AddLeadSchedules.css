@@ -1,0 +1,45 @@
+full-height-parent {
+    height: 100%;
+    flex-direction: row;
+    display: flex;
+      }
+  .full-height-child {
+    height: 100%;
+  }
+  .full-height-First-child {        
+    display: flex;
+    flex-direction: column;    
+    padding: 2px;
+    width: 60vh;
+  }
+  .full-height-First-child-left {        
+    display: flex;
+    flex-direction: column;   
+    padding: 2px;
+    width: 60vh;
+  }
+
+  .container-main-schedule {
+    display: flex;
+    flex-direction: row;
+    padding: 2px;    
+    height: 60vh;
+  }
+  
+  .left-side-schedule {
+    width: 50%;
+    padding: 1px 5px 1px 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    height: 100vh;  
+  }
+  
+  .right-side-schedule {
+    width: 50%;
+    padding: 5px 1px 1px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    height: 100vh;
+  }

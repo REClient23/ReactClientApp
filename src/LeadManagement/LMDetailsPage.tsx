@@ -24,23 +24,36 @@ import "primeicons/primeicons.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import LeadNotesTimeLinePage from "./LeadNotesTimeLinePage";
 import Leads from "./Leads";
+import LeadsProfileLandingPage from "./LeadsProfile/LeadsProfileLandingPage";
 
 const LMDetailsPage = forwardRef<
   ParentToChildHandler,
   LeadManagementHandlerProps
 >((props, ref) => {
   useImperativeHandle(ref, () => ({
-    Action() {      
+    Action() {
       addChildRef.current?.Action();
+      profileChildRef.current?.Action();
     },
   }));
   const addChildRef = useRef<ParentToChildHandler>(null);
+  const profileChildRef = useRef<ParentToChildHandler>(null);
   return (
     <div>
       <Navbar>
         <Navbar.Group align={Alignment.LEFT}>
           <Tabs id="navbar" fill={true}>
-            <Tab id="Profile" title="Profile" icon="user" />
+            <Tab
+              id="Profile"
+              title="Profile"
+              icon="user"
+              panel={
+                <LeadsProfileLandingPage
+                  ref={profileChildRef}
+                  selectedLead={props.selectedLead}
+                />
+              }
+            />
             <Tab
               id="Activity"
               title="Activity"

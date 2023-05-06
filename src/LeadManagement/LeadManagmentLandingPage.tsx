@@ -18,10 +18,13 @@ import "./LeadManagementPages.css";
 import { appBaseURL } from "../CommonComponents/ApplicationConstants";
 import Leads from "./Leads";
 import { Badge } from "primereact/badge";
+import AddLeadSchedules from "./LeadsScheduleAppointment/AddLeadSchedules";
 
 function LeadManagmentLandingPage() {
+
   const addChildRef = useRef<ParentToChildHandler>(null);
   const notesChildRef = useRef<ParentToChildHandler>(null);
+  const scheduleChildRef = useRef<ParentToChildHandler>(null);
   const [paramLeadManagementHandlerProps, setLeadManagementHandlerProps] =
     useState<LeadManagementHandlerProps>();
   const [selectedCT, setSelectedCT] = useState<Leads>();
@@ -58,6 +61,9 @@ function LeadManagmentLandingPage() {
   const OnAddClickHandler = () => {
     addChildRef.current?.Action();
   };
+  const OnScheduleClickHandler = () => {
+    scheduleChildRef.current?.Action();
+  };
   const items = [
     {
       label: "Add",
@@ -68,8 +74,8 @@ function LeadManagmentLandingPage() {
     },
     {
       label: "Update",
-      icon: "pi pi-refresh",
-      command: () => {},
+      icon: "pi pi-calendar-plus",
+      command: () => {OnScheduleClickHandler()},
     },
     {
       label: "Delete",
@@ -138,6 +144,12 @@ function LeadManagmentLandingPage() {
         ref={addChildRef}
         selectedLead={selectedCT}
       />
+
+<AddLeadSchedules        
+        ref={scheduleChildRef}
+        selectedLead={selectedCT}
+      />
+
     </div>
   );
 }
