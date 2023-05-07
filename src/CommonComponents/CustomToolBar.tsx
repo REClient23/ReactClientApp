@@ -1,5 +1,10 @@
-import { Button } from "@blueprintjs/core";
+import { Button, Label } from "@blueprintjs/core";
+
+import { Toolbar } from 'primereact/toolbar';
+        
 import "./CustomToolBar.css";
+import React from "react";
+import { Tag } from "primereact/tag";
 
 interface HeaderParams {
   HeaderText: string;
@@ -10,33 +15,41 @@ interface HeaderParams {
 }
 
 const CustomToolBar = (params: HeaderParams) => {  
+
+  const startContent = (
+    <div>
+        <Label style={{color:"aliceblue",marginLeft:"10px",verticalAlign:"center" }}> {params.HeaderText}</Label>   
+    </div>
+);
+const endContent = (
+  <React.Fragment>
+     <Button
+        intent="primary"
+        icon="add"        
+        onClick={params.OnAddClickHandler}
+        style={{marginRight:"5px"}}
+      />
+     <Button
+        intent="primary"
+        icon="edit"          
+        onClick={params.OnEditClickHandler}
+        style={{marginRight:"5px"}}
+      />
+     <Button
+        intent="primary"
+        icon="trash"        
+        onClick={params.OnDeleteClickHandler}
+        style={{marginRight:"5px"}}
+      />            
+  </React.Fragment>
+);
   var btnclass: string = "toolbarbuttontrue";
   if(params.IsAddActionVisible===false)
   {
     btnclass="toolbarbuttonfalse"
   }
   return (
-    <div className="toolbardiv">
-      <h3 className="customHeaderLabel"> {params.HeaderText}</h3>            
-      <Button
-        intent="primary"
-        icon="trash"
-        className={btnclass}        
-        onClick={params.OnDeleteClickHandler}
-      />
-      <Button
-        intent="primary"
-        icon="edit"
-        className={btnclass}     
-        onClick={params.OnEditClickHandler}
-      />
-      <Button
-        intent="primary"
-        icon="add"
-        className={btnclass}        
-        onClick={params.OnAddClickHandler}
-      />
-    </div>
+    <Toolbar start={startContent} end={endContent} style={{padding:"2px",marginTop:"0px",backgroundColor:"#3b3e40"}}/>   
   );
 };
 export default CustomToolBar;

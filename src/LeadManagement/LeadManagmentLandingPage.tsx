@@ -125,7 +125,7 @@ function LeadManagmentLandingPage() {
           options={rowData}
           itemTemplate={countryTemplate}
           onChange={onSelectionChanged}
-          listStyle={{ maxHeight: "85vh" }}
+          listStyle={{ maxHeight: "90vh" }}
         />
       </div>
       <div className="right-side">
