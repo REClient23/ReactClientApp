@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/ReactClientApp/static/css/main.ad333411.css",
-    "main.js": "/ReactClientApp/static/js/main.f378d189.js",
+    "main.css": "/ReactClientApp/static/css/main.7744ced2.css",
+    "main.js": "/ReactClientApp/static/js/main.2385a12b.js",
     "static/js/787.524da18d.chunk.js": "/ReactClientApp/static/js/787.524da18d.chunk.js",
     "static/media/primeicons.svg": "/ReactClientApp/static/media/primeicons.e1441b135b3ca9ad643c.svg",
     "static/media/primeicons.eot": "/ReactClientApp/static/media/primeicons.d44157bdfa026dc877af.eot",
@@ -10,12 +10,12 @@
     "static/media/primeicons.woff2": "/ReactClientApp/static/media/primeicons.78172950b335ccdb94e2.woff2",
     "static/media/color.png": "/ReactClientApp/static/media/color.6441e63a57ccc5105bad.png",
     "index.html": "/ReactClientApp/index.html",
-    "main.ad333411.css.map": "/ReactClientApp/static/css/main.ad333411.css.map",
-    "main.f378d189.js.map": "/ReactClientApp/static/js/main.f378d189.js.map",
+    "main.7744ced2.css.map": "/ReactClientApp/static/css/main.7744ced2.css.map",
+    "main.2385a12b.js.map": "/ReactClientApp/static/js/main.2385a12b.js.map",
     "787.524da18d.chunk.js.map": "/ReactClientApp/static/js/787.524da18d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ad333411.css",
-    "static/js/main.f378d189.js"
+    "static/css/main.7744ced2.css",
+    "static/js/main.2385a12b.js"
   ]
 }
