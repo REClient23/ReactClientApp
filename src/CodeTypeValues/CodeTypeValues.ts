@@ -4,3 +4,4 @@ export interface CodeTypeValues{
     codeTypeShortCode:string;
     codeTypeDesc:string;
 }
+export const newCodetypedata = { shortCode: "", description: "",codeTypeShortCode:"", codeTypeDesc:"" }

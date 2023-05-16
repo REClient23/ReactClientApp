@@ -4,8 +4,6 @@ export interface Leads{
          PhNumber :number|any,
          Budget :number,
          Criteria :string,
-         LeadStatus :string,
-         PreviousSchedule:Date|any ,
-         NextSchedule :Date|any
+         LeadStatus :string,         
         //  int? Facility 
 }

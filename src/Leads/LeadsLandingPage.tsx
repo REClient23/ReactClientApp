@@ -8,8 +8,9 @@ import { ErrorToaser } from "../CommonComponents/Toast";
 import { Leads } from "./Leads";
 import { ParentToChildHandler } from "../CommonComponents/ParentToChildHandler";
 import EditLead from "./EditLead";
-import DeleteLeadValues from "./DeleteLeadTypeValues";
+import DeleteLeadValues from "./DeleteLeadValues";
 import AddNewLeadValues from "./AddNewLead";
+import { GetAllData, GetData } from "../CommonComponents/APICalls";
 function LeadsLandingPage() {
 
   const [rowData, setRowData] = useState();
@@ -17,7 +18,7 @@ function LeadsLandingPage() {
   const deleteChildRef = useRef<ParentToChildHandler>(null);
   const editChildRef= useRef<ParentToChildHandler>(null);
   const [selectedRowData, setSelectedRowData] = useState<Leads>();
-  const leads: Leads = { PhNumber: "", LeadStatus: "",Name:"", Budget:0, Criteria:"",LeadId:0, PreviousSchedule:"", NextSchedule:0 };
+  const leads: Leads = { PhNumber: "", LeadStatus: "",Name:"", Budget:0, Criteria:"",LeadId:0};
 
   const [columnDefs, setColumnDefs] = useState([
     { field: "leadId" },
@@ -26,8 +27,8 @@ function LeadsLandingPage() {
     { field: "budget" },
     { field: "criteria" },
     { field: "leadStatus" },
-    { field: "previousSchedule" },
-    { field: "nextSchedule" },
+    // { field: "previousSchedule" },
+    // { field: "nextSchedule" },
   ]);
   const defaultColDef = useMemo(
     () => ({
@@ -40,10 +41,9 @@ function LeadsLandingPage() {
   );
 
   const refreshData = () => {
-    fetch(appBaseURL+"/LeadMgmt")
-      .then((result) => result.json())
-      .then((rowData) => setRowData(rowData))
-      .catch((error) => console.log(error));
+    const apiCalls = {apiUrl:"/LeadMgmt"}
+    const resp = GetData(apiCalls);
+    resp.then((response)=>setRowData(response));    
   };
   useEffect(() => refreshData(), []);
 
@@ -82,8 +82,6 @@ function LeadsLandingPage() {
   const OnAddClickHandler = () => {
     if(selectedRowData===undefined){
       setSelectedRowData(leads);
-      // ErrorToaser("Please select a Code Type to Add");
-      
     }
     addChildRef.current?.Action();
     

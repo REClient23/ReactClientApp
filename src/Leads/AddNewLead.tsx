@@ -7,8 +7,6 @@ import {
     InputGroup,  
     NumericInput
   } from "@blueprintjs/core";
-  import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
-  import '@blueprintjs/datetime'
   import React, { forwardRef, useImperativeHandle, useState } from "react";
   import {
     ParentToChildHandler,
@@ -16,13 +14,13 @@ import {
   } from "../CommonComponents/ParentToChildHandler";
   import axios from "axios";
   import {
-    AppToaster,
     ErrorToaser,
     SuccessToaser,
   } from "../CommonComponents/Toast";
   import { appBaseURL } from "../CommonComponents/ApplicationConstants";
-import { DatePicker } from "@blueprintjs/datetime";
-
+import { GetData } from "../CommonComponents/APICalls";
+import { newCodetypedata } from "../CodeTypeValues/CodeTypeValues";        
+import { Dropdown } from "primereact/dropdown";
   // import { DatePicker } from "@blueprintjs/datetime";
   // const modifiers = { isSunday };
   const AddNewLeadValues = forwardRef<
@@ -43,14 +41,28 @@ import { DatePicker } from "@blueprintjs/datetime";
         Budget :0,
         Criteria :"",
         LeadStatus :"",
-        PreviousSchedule:"" ,
-        NextSchedule : new Date() };
+        // PreviousSchedule:"" ,
+        // NextSchedule : new Date() 
+      };
     const [ispopupOpen, setIspopupOpen] = useState(false);
     const [leaddata, setNewLeadData] = useState(newLeaddata);
-  
+    const [selectedLeadStatus, setSelectedLeadStatus] = useState(newCodetypedata);
+    
+    const codeTypeList = [
+      newCodetypedata
+    ]
+    
+
     const Initialize = () => {
+      const apiProps ={apiUrl: "/api/CodeTypeValues/LEAD_STATUS"}
+      const resp = GetData(apiProps);
+      
+      resp.then((response)=>setLeadStatuses(response))
       setIspopupOpen(true);
     };
+    const [leadStatus,setLeadStatuses] =useState(codeTypeList);
+    
+
   
     const OnCloseHandler = () => {      
       setIspopupOpen(false);
@@ -61,7 +73,7 @@ import { DatePicker } from "@blueprintjs/datetime";
         createPost();
       }
     };
-  
+
     const Validate = () => {
       var isvalidData: boolean = true;
       var errorMessage: string = "";
@@ -91,19 +103,17 @@ import { DatePicker } from "@blueprintjs/datetime";
         PhNumber :leaddata.PhNumber,
          Budget :leaddata.Budget,
          Criteria :leaddata.Criteria,
-         LeadStatus :leaddata.LeadStatus,
-        // PreviousSchedule:leaddata.PreviousSchedule,
-         NextSchedule :leaddata.NextSchedule
+         LeadStatus :selectedLeadStatus.shortCode,
       };   
       console.log("Modified LeadData:")
       console.log(ctv)     
       axios
         .post( appBaseURL+"/LeadMgmt", ctv)
-        .then((response) => {
+        .then(() => {
           SuccessToaser("Saved Successfully");
         })
-        .then((data) => setIspopupOpen(false))
-        .then((p) => props.OnRefreshHandler())
+        .then(() => setIspopupOpen(false))
+        .then(() => props.OnRefreshHandler())
         .catch((e) => {
           console.log(e.response);
           ErrorToaser(e.response.data.substring(0,100));
@@ -118,19 +128,14 @@ import { DatePicker } from "@blueprintjs/datetime";
       }));
     };
 
-    const handleValueChange = (valueAsNumber: number,valueAsString: string) => {
+
+    const handleValueChange = (valueAsNumber: number) => {
       setNewLeadData((previousdata) => ({
         ...previousdata,
         ["Budget"]: valueAsNumber,
       }));
   };
 
-    const handleDateChange = (date:Date) =>{
-      setNewLeadData((previousdata) => ({
-        ...previousdata,
-        ["NextSchedule"]: date,
-      }));
-    };
   
     return (
       <div>
@@ -166,7 +171,7 @@ import { DatePicker } from "@blueprintjs/datetime";
             <FormGroup label="Budget" labelFor="text-input" labelInfo="*">
               <NumericInput
                 id="Budget"
-                placeholder="Enter Phone Number"
+                placeholder="Enter budget"
                 onValueChange={handleValueChange}
                 value={leaddata.Budget}
                 required
@@ -182,42 +187,17 @@ import { DatePicker } from "@blueprintjs/datetime";
                 required
               />
             </FormGroup>
-            <FormGroup label="LeadStatus" labelFor="text-input" labelInfo="*">
-              <InputGroup
-                id="LeadStatus"
-                placeholder="Enter LeadStatus"
-                onChange={onChange}
-                value={leaddata.LeadStatus}
-                required
-              />
-            </FormGroup>
-            <FormGroup label="Previous Schedule" labelFor="text-input" labelInfo="*">
-              <InputGroup
-                id="PreviousSchedule"
-                onChange={onChange}
-                value={leaddata.PreviousSchedule}
-                required
-                disabled
-                
-              />
-            </FormGroup>
-           
-            <FormGroup label="Next Schedule" labelFor="text-input" labelInfo="*">
-              <DatePicker
-              canClearSelection={true}
-              onChange={(newDate)=>handleDateChange(newDate)}
-              />
-            </FormGroup>
-            {/* <FormGroup label="Next Schedule" labelFor="text-input" labelInfo="*">
-              <InputGroup
-                id="NextSchedule"
-                placeholder="Please define schedule"
-                onChange={onChange}
-                value={leaddata.NextSchedule}
-                required
-                
-              />
-            </FormGroup> */}
+            <FormGroup label="Lead Status" labelFor="text-input" labelInfo="*">
+            <Dropdown 
+                  id="LeadStatus"
+                  value={selectedLeadStatus}
+                  onChange={(e) => setSelectedLeadStatus(e.value)}
+                  options={leadStatus}
+                  optionLabel="description"
+                  placeholder="Select Lead Status Type"
+                  
+                />
+            </FormGroup>            
           </DialogBody>
           <DialogFooter
             actions={
