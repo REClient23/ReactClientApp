@@ -17,6 +17,8 @@ import {
 import CodeTypeValueLandingPage from "./CodeTypeValues/CodeTypeValueLandingPage";
 import LeadManagmentLandingPage from "./LeadManagement/LeadManagmentLandingPage";
 import Login_Form from "./Login/Login_form";
+import GoogleLoginPage from "./Login/GoogleLogin";
+import TelegramIntegration from "./Telegram/TelegramIntegration";
 function App() {
   const [loggedin, setLoggedin] = useState(false);
   return loggedin ? (
@@ -37,7 +39,10 @@ function App() {
     </div>
     
   ) : (
-    <Login_Form  onLoginSuccessHandler={()=>setLoggedin(true)}/>
+    <div>
+    <GoogleLoginPage  onLoginSuccessHandler={()=>setLoggedin(true)}/>
+    <TelegramIntegration/>
+    </div>
   );
 }
 
