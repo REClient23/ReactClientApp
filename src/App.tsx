@@ -41,7 +41,7 @@ function App() {
   ) : (
     <div>
     <GoogleLoginPage  onLoginSuccessHandler={()=>setLoggedin(true)}/>
-    <TelegramIntegration/>
+    {/* <TelegramIntegration/> */}
     </div>
   );
 }

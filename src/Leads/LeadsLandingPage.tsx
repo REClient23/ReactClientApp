@@ -3,14 +3,14 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import CustomToolBar from "../CommonComponents/CustomToolBar";
-import {appBaseURL} from "../CommonComponents/ApplicationConstants";
+import { leadRelative} from "../CommonComponents/ApplicationConstants";
 import { ErrorToaser } from "../CommonComponents/Toast";
 import { Leads } from "./Leads";
 import { ParentToChildHandler } from "../CommonComponents/ParentToChildHandler";
 import EditLead from "./EditLead";
 import DeleteLeadValues from "./DeleteLeadValues";
 import AddNewLeadValues from "./AddNewLead";
-import { GetAllData, GetData } from "../CommonComponents/APICalls";
+import { GetData } from "../CommonComponents/APICalls";
 function LeadsLandingPage() {
 
   const [rowData, setRowData] = useState();
@@ -41,7 +41,7 @@ function LeadsLandingPage() {
   );
 
   const refreshData = () => {
-    const apiCalls = {apiUrl:"/LeadMgmt"}
+    const apiCalls = {apiUrl:leadRelative}
     const resp = GetData(apiCalls);
     resp.then((response)=>setRowData(response));    
   };

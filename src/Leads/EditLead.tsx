@@ -21,7 +21,8 @@ import {
   ErrorToaser,
   SuccessToaser,
 } from "../CommonComponents/Toast";
-import { appBaseURL } from "../CommonComponents/ApplicationConstants";
+import { appBaseURL, leadRelative } from "../CommonComponents/ApplicationConstants";
+import { PutData } from "../CommonComponents/APICalls";
 
 const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
   (props , ref) => {
@@ -35,8 +36,8 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
           newLeaddata.Budget =props.codeTypes.budget;
           newLeaddata.Criteria =props.codeTypes.criteria;
           newLeaddata.LeadStatus =props.codeTypes.leadStatus;
-          newLeaddata.PreviousSchedule=props.codeTypes.previousSchedule;
-          newLeaddata.NextSchedule =props.codeTypes.nextSchedule;
+          // newLeaddata.PreviousSchedule=props.codeTypes.previousSchedule;
+          // newLeaddata.NextSchedule =props.codeTypes.nextSchedule;
         };
         
         setnewLead(newLeaddata);
@@ -51,8 +52,9 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
         Budget :0,
         Criteria :"",
         LeadStatus :"",
-        PreviousSchedule:"" ,
-        NextSchedule :""};
+        // PreviousSchedule:"" ,
+        // NextSchedule :""
+      };
     const [ispopupOpen, setIspopupOpen] = useState(false);
     const [newLead, setnewLead] = useState(newLeaddata);
 
@@ -97,18 +99,19 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
     };
 
     function createPost() {
-      console.log(newLead);
-      axios
-        .put(appBaseURL + "/LeadMgmt", newLead)
-        .then((response) => {
-          SuccessToaser("Saved Successfully");
-        })
-        .then((data) => setIspopupOpen(false))
-        .then((p) => props.OnRefreshHandler())
-        .catch((e) => {
-          ErrorToaser(e.response.data.substring(0, 100));
-          console.log(e.response);
-        });
+      //console.log(newLead);
+      const putParam = {postParam:newLead}
+      const leadURL = {apiUrl:leadRelative}
+      const result = PutData(leadURL, putParam);
+      result
+        .then((x) => (x)?
+        Success():ErrorToaser(x));      
+    }
+
+    function Success(){
+      SuccessToaser("Saved Successfully");
+      setIspopupOpen(false);
+      props.OnRefreshHandler()
     }
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,7 +178,7 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
                 required
               />
             </FormGroup>
-            <FormGroup label="Previous Schedule" labelFor="text-input" labelInfo="*">
+            {/* <FormGroup label="Previous Schedule" labelFor="text-input" labelInfo="*">
               <InputGroup
                 id="PreviousSchedule"
                 onChange={onChange}
@@ -194,7 +197,7 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
                 required
                 disabled
               />
-            </FormGroup>
+            </FormGroup> */}
           </DialogBody>
           <DialogFooter
             actions={

@@ -17,8 +17,8 @@ import {
     ErrorToaser,
     SuccessToaser,
   } from "../CommonComponents/Toast";
-  import { appBaseURL } from "../CommonComponents/ApplicationConstants";
-import { GetData } from "../CommonComponents/APICalls";
+  import { appBaseURL, ctvRelative, leadRelative } from "../CommonComponents/ApplicationConstants";
+import { GetData, PostData } from "../CommonComponents/APICalls";
 import { newCodetypedata } from "../CodeTypeValues/CodeTypeValues";        
 import { Dropdown } from "primereact/dropdown";
   // import { DatePicker } from "@blueprintjs/datetime";
@@ -51,10 +51,10 @@ import { Dropdown } from "primereact/dropdown";
     const codeTypeList = [
       newCodetypedata
     ]
-    
+    const apiProps ={apiUrl: ctvRelative+ "/LEAD_STATUS"}
 
     const Initialize = () => {
-      const apiProps ={apiUrl: "/api/CodeTypeValues/LEAD_STATUS"}
+      
       const resp = GetData(apiProps);
       
       resp.then((response)=>setLeadStatuses(response))
@@ -104,23 +104,23 @@ import { Dropdown } from "primereact/dropdown";
          Budget :leaddata.Budget,
          Criteria :leaddata.Criteria,
          LeadStatus :selectedLeadStatus.shortCode,
-      };   
+      };  
       console.log("Modified LeadData:")
       console.log(ctv)     
-      axios
-        .post( appBaseURL+"/LeadMgmt", ctv)
-        .then(() => {
-          SuccessToaser("Saved Successfully");
-        })
-        .then(() => setIspopupOpen(false))
-        .then(() => props.OnRefreshHandler())
-        .catch((e) => {
-          console.log(e.response);
-          ErrorToaser(e.response.data.substring(0,100));
-          
-        });
+      const postParam = {postParam:ctv}
+      const leadURL = {apiUrl:leadRelative}
+      const result = PostData(leadURL,postParam)
+        result
+        .then((x) => (x)?
+        Success():ErrorToaser(x));
+       
     }
-  
+    
+    function Success(){
+      SuccessToaser("Saved Successfully");
+      setIspopupOpen(false);
+      props.OnRefreshHandler()
+    }
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setNewLeadData((previousdata) => ({
         ...previousdata,
