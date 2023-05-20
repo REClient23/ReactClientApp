@@ -71,6 +71,9 @@ const setDataSource=(shortCode:string,data:CodeTypeValues[])=>
     refreshCTVData("PROPERTY_TYPE");
     refreshCTVData("DOOR_FACING");
     refreshCTVData("FURNISHED_STATUS");   
+    setFurnished(undefined)
+    setFacing(undefined)
+    setPropertyType(undefined)
     setTimeout(openDialog, 100);    
   };
 
