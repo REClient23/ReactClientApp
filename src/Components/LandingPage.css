@@ -43,3 +43,16 @@ h2{
   {
     visibility: collapse;
   }
+
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .login-image {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+  }
