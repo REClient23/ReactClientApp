@@ -7,7 +7,7 @@ import {
   InputGroup,
   NumericInput,
 } from "@blueprintjs/core";
-import React, { forwardRef, useImperativeHandle, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import {
   ParentToChildHandler,
   ParentChildHandlerProps,
@@ -54,26 +54,30 @@ const setDataSource=(shortCode:string,data:CodeTypeValues[])=>
 {
   switch (shortCode) {
     case "PROPERTY_TYPE":
-      setSrcPropertyTypes(data)
+      setSrcPropertyTypes(data)                    
       break;
     case "DOOR_FACING":
-      setSrcFacing(data)
+      setSrcFacing(data)      
       break;   
       case "FURNISHED_STATUS":
-        setSrcFurnished(data)
+        setSrcFurnished(data)                
       break;   
     default:      
       break;
   }  
 }
-
+ 
   const Initialize = () => {
     refreshCTVData("PROPERTY_TYPE");
     refreshCTVData("DOOR_FACING");
-    refreshCTVData("FURNISHED_STATUS");
-    setIspopupOpen(true);
+    refreshCTVData("FURNISHED_STATUS");   
+    setTimeout(openDialog, 100);    
   };
 
+  const openDialog=()=>
+  {
+    setIspopupOpen(true);    
+  }
   const OnCloseHandler = () => {
     console.log("close add window");
     setIspopupOpen(false);
