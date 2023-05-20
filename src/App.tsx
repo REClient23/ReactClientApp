@@ -16,6 +16,7 @@ import {
 } from "react-router-dom";
 import CodeTypeValueLandingPage from "./CodeTypeValues/CodeTypeValueLandingPage";
 import LeadManagmentLandingPage from "./LeadManagement/LeadManagmentLandingPage";
+import PropertyLandingPage from "./Property/PropertyLandingPage";
 import Login_Form from "./Login/Login_form";
 import GoogleLoginPage from "./Login/GoogleLogin";
 import TelegramIntegration from "./Telegram/TelegramIntegration";
@@ -30,10 +31,8 @@ function App() {
           <Route path="/Leads" element={<LeadsLandingPage />} />
           <Route path="/CodeTypes" element={<CodeTypesLandingPage />} />
           <Route path="/CodeTypeValue" element={<CodeTypeValueLandingPage />} />
-          <Route
-            path="/LeadManagement"
-            element={<LeadManagmentLandingPage />}
-          />
+          <Route path="/LeadManagement" element={<LeadManagmentLandingPage />}/>
+          <Route path="/Property" element={<PropertyLandingPage />} />
         </Routes>
       </BrowserRouter>
     </div>

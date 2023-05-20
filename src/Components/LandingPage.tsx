@@ -17,11 +17,15 @@ function LandingPage() {
             <Link to={`LeadManagement`} style={{ color: "aliceblue" }}>
               Dashboard
             </Link>
-          </Button>
-          <span className="bp4-navbar-divider"></span>
+          </Button>          
           <Button icon="rocket" className="bp4-minimal">
             <Link to={`Leads`} style={{ color: "aliceblue" }}>
               Leads
+            </Link>
+          </Button>
+          <Button icon="home" className="bp4-minimal">
+            <Link to={`Property`} style={{ color: "aliceblue" }}>
+            Property
             </Link>
           </Button>
           <Button icon="settings" className="bp4-minimal">
