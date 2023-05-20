@@ -141,7 +141,6 @@ function LeadManagmentLandingPage() {
         />
       </div>
       <AddLeadNotes ref={addChildRef} selectedLead={selectedCT} />
-
       <AddLeadSchedules ref={scheduleChildRef} selectedLead={selectedCT} />
     </div>
   );

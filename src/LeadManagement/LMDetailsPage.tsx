@@ -26,6 +26,7 @@ import LeadNotesTimeLinePage from "./LeadNotesTimeLinePage";
 import Leads from "./Leads";
 import LeadsProfileLandingPage from "./LeadsProfile/LeadsProfileLandingPage";
 import LeadSchedulesTimeLinePage from "./LeadsScheduleAppointment/LeadSchedulesTimelinePage";
+import LeadPropertyLandingPage from "./LeadPropertyDetails/LeadPropertyLandingPage";
 
 const LMDetailsPage = forwardRef<
   ParentToChildHandler,
@@ -36,11 +37,13 @@ const LMDetailsPage = forwardRef<
       addChildRef.current?.Action();
       profileChildRef.current?.Action();
       scheduleChildRef.current?.Action();
+      propertyChildRef.current?.Action();
     },
   }));
   const addChildRef = useRef<ParentToChildHandler>(null);
   const profileChildRef = useRef<ParentToChildHandler>(null);
   const scheduleChildRef = useRef<ParentToChildHandler>(null);
+  const propertyChildRef = useRef<ParentToChildHandler>(null);
   return (
     <div>
       <Navbar>
@@ -87,14 +90,21 @@ const LMDetailsPage = forwardRef<
               icon="home"
               tagContent="7"
               tagProps={{ round: true, intent: "danger" }}
+              panel={
+                <LeadPropertyLandingPage
+                  ref={propertyChildRef}
+                  selectedLead={props.selectedLead}
+                />}
             />
-            <Tab id="Analytics" title="Analytics" icon="chart" />
-            <Tab id="Funnel" title="Funnel" icon="filter" />
+            
           </Tabs>
         </Navbar.Group>
       </Navbar>
     </div>
   );
 });
-
+/*
+<Tab id="Analytics" title="Analytics" icon="chart" />
+            <Tab id="Funnel" title="Funnel" icon="filter" />
+            */
 export default LMDetailsPage;
