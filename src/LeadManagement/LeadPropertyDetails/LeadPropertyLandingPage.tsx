@@ -11,7 +11,6 @@ import { Rating } from "primereact/rating";
 import { Tag } from "primereact/tag"; 
 import { Property } from "../../Property/Property";
 import { appBaseURL } from "../../CommonComponents/ApplicationConstants";
-import 'primereact/resources/themes/lara-light-indigo/theme.css';   // theme
 import 'primereact/resources/primereact.css';                       // core css
 import 'primeicons/primeicons.css';                                 // icons
 import 'primeflex/primeflex.css';        
@@ -105,23 +104,14 @@ const LeadPropertyLandingPage = forwardRef<
     }
 
     if (layout === "list") return listItem(product);    
-  };  
-  const header = () => {
-    return (
-      <div className="flex justify-content-end">
-        <DataViewLayoutOptions
-          layout="grid"
-          onChange={(e) => setLayout(e.value)}
-        />
-      </div>
-    );
-  };
-
+  };    
   return (
-    <div className="card">
+    <div>
       <DataView
         value={srcProperties}
         itemTemplate={itemTemplate}        
+        paginator rows={4}
+        style={{width:"100vh"}}
       />
     </div>
   );
