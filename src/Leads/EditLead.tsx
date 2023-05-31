@@ -15,27 +15,31 @@ import {
   ParentToChildHandler,
   ParentChildHandlerProps,
 } from "../CommonComponents/ParentToChildHandler";
-import axios from "axios";
 import {
-  AppToaster,
   ErrorToaser,
   SuccessToaser,
 } from "../CommonComponents/Toast";
-import { appBaseURL, leadRelative } from "../CommonComponents/ApplicationConstants";
-import { PutData } from "../CommonComponents/APICalls";
+import { ctvRelative, leadRelative } from "../CommonComponents/ApplicationConstants";
+import { GetData, PutData } from "../CommonComponents/APICalls";
+import { newCodetypedata } from "../CodeTypeValues/CodeTypeValues";
+import { Dropdown } from "primereact/dropdown";
+import { RequiredValidation } from "../CommonComponents/Validation";
+import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
 
 const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
   (props , ref) => {
     useImperativeHandle(ref, () => ({
       Action() {        
         {
-          
+          const currentStatus = leadStatus.find((x)=>x.description===props.codeTypes.leadStatus)
+          const currentLeadStatus = (currentStatus)?currentStatus:newCodetypedata
           newLeaddata.LeadId= props.codeTypes.leadId;
           newLeaddata.Name =props.codeTypes.name;
           newLeaddata.PhNumber =props.codeTypes.phNumber;
           newLeaddata.Budget =props.codeTypes.budget;
           newLeaddata.Criteria =props.codeTypes.criteria;
-          newLeaddata.LeadStatus =props.codeTypes.leadStatus;
+          
+          setSelectedLeadStatus(currentLeadStatus);
           // newLeaddata.PreviousSchedule=props.codeTypes.previousSchedule;
           // newLeaddata.NextSchedule =props.codeTypes.nextSchedule;
         };
@@ -51,17 +55,33 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
         PhNumber :"",
         Budget :0,
         Criteria :"",
-        LeadStatus :"",
-        // PreviousSchedule:"" ,
-        // NextSchedule :""
+        LeadStatus :"",        
       };
+
+      const codeTypeList = [
+        newCodetypedata
+      ]
+      const apiProps ={apiUrl: ctvRelative+ "/LEAD_STATUS"}
     const [ispopupOpen, setIspopupOpen] = useState(false);
     const [newLead, setnewLead] = useState(newLeaddata);
+    const [selectedLeadStatus, setSelectedLeadStatus] = useState(newCodetypedata);
+    const [leadStatus,setLeadStatuses] =useState(codeTypeList);
 
     const Initialize = (props: ParentChildHandlerProps) => {
-      console.log(newLead)
+      const resp = GetData(apiProps);
+      
+      resp.then((response)=>setLeadStatuses(response))
+      
       setIspopupOpen(true);
     };
+
+    const handleValueChange = (e:InputNumberValueChangeEvent) => {
+      setnewLead((previousdata) => ({
+        ...previousdata,
+        [e.target.id]: e.value,
+      }));
+    };
+
 
     const OnCloseHandler = () => {
       console.log("close add window");
@@ -69,30 +89,33 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
     };
 
     const OnSaveHandler = () => {
-      console.log("I am here");
       var isValid =  Validate()
-      console.log(isValid)
       if (isValid) {
         createPost();
       }
     };
 
+
     const Validate = () => {
+
       var isvalidData: boolean = true;
       var errorMessage: string = "";
+      var defaultMessage:string ="Please enter "
+      console.log(newLead.Budget)
+      errorMessage = RequiredValidation(newLead.Name,"Lead Name");
+      errorMessage += RequiredValidation(newLead.PhNumber,"Phone Number");
+      errorMessage += RequiredValidation(newLead.Criteria,"Criteria");
+      errorMessage += RequiredValidation(newLead.Budget,"Budget");
 
-      if (newLead.Name === "") {
-        errorMessage = "Please Enter Name";
+ 
+      if(errorMessage.length>1)
+      {
         isvalidData = false;
       }
-      if (newLead.PhNumber === "") {
-        if (errorMessage === "") errorMessage = "Please Enter Phone Number";
-        else errorMessage = errorMessage + " and Description";
-        isvalidData = false;
-      }
-      console.log(isvalidData)
+      
+
       if (!isvalidData) {
-        ErrorToaser(errorMessage);
+        ErrorToaser(defaultMessage +  errorMessage.slice(0,errorMessage.length-1));
       }
 
       return isvalidData;
@@ -100,7 +123,21 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
 
     function createPost() {
       //console.log(newLead);
-      const putParam = {postParam:newLead}
+   
+
+      var ctv={
+        LeadId: newLead.LeadId,
+        Name :newLead.Name,
+        PhNumber :newLead.PhNumber,
+         Budget :newLead.Budget,
+         Criteria :newLead.Criteria,
+         LeadStatus :selectedLeadStatus.shortCode,
+      };  
+
+      console.log(selectedLeadStatus.shortCode)
+      console.log(ctv)
+
+      const putParam = {postParam:ctv}
       const leadURL = {apiUrl:leadRelative}
       const result = PutData(leadURL, putParam);
       result
@@ -136,6 +173,7 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
                 id="Name"
                 placeholder="Enter Lead Name"
                 value={newLead.Name}
+                onChange={onChange}
                 required
               />
             </FormGroup>
@@ -146,18 +184,16 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
                 onChange={onChange}
                 value={newLead.PhNumber}
                 required
-                autoFocus
               />
             </FormGroup>
 
-            <FormGroup label="Budget" labelFor="text-input" labelInfo="*">
-              <InputGroup
-                id="Budget"
-                placeholder="Enter Phone Number"
-                onChange={onChange}
-                value={newLead.Budget.toString()}
-                required
-              />
+            <FormGroup label="Budget" labelFor="text-input" labelInfo="*">             
+                <InputNumber
+            value={newLead.Budget} 
+            id="Budget"
+            onValueChange={(e) => handleValueChange(e)}  
+            mode="decimal"
+             />
             </FormGroup>
 
             <FormGroup label="Criteria" labelFor="text-input" labelInfo="*">
@@ -169,7 +205,18 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
                 required
               />
             </FormGroup>
-            <FormGroup label="LeadStatus" labelFor="text-input" labelInfo="*">
+            <FormGroup label="Lead Status" labelFor="text-input" labelInfo="*">
+            <Dropdown
+                  id="LeadStatus"
+                  value={selectedLeadStatus}
+                  onChange={(e) => setSelectedLeadStatus(e.value)}
+                  options={leadStatus}
+                  optionLabel="description"
+                  placeholder="Select Lead Status Type"
+                  
+                />
+            </FormGroup>    
+            {/* <FormGroup label="LeadStatus" labelFor="text-input" labelInfo="*">
               <InputGroup
                 id="LeadStatus"
                 placeholder="Enter LeadStatus"
@@ -177,7 +224,7 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
                 value={newLead.LeadStatus}
                 required
               />
-            </FormGroup>
+            </FormGroup> */}
             {/* <FormGroup label="Previous Schedule" labelFor="text-input" labelInfo="*">
               <InputGroup
                 id="PreviousSchedule"

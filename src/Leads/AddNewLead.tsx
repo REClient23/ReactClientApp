@@ -12,17 +12,16 @@ import {
     ParentToChildHandler,
     ParentChildHandlerProps,
   } from "../CommonComponents/ParentToChildHandler";
-  import axios from "axios";
   import {
     ErrorToaser,
     SuccessToaser,
   } from "../CommonComponents/Toast";
-  import { appBaseURL, ctvRelative, leadRelative } from "../CommonComponents/ApplicationConstants";
+  import { ctvRelative, leadRelative } from "../CommonComponents/ApplicationConstants";
 import { GetData, PostData } from "../CommonComponents/APICalls";
 import { newCodetypedata } from "../CodeTypeValues/CodeTypeValues";        
 import { Dropdown } from "primereact/dropdown";
-  // import { DatePicker } from "@blueprintjs/datetime";
-  // const modifiers = { isSunday };
+import { RequiredValidation } from "../CommonComponents/Validation";
+import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber';
   const AddNewLeadValues = forwardRef<
     ParentToChildHandler,
     ParentChildHandlerProps
@@ -77,19 +76,18 @@ import { Dropdown } from "primereact/dropdown";
     const Validate = () => {
       var isvalidData: boolean = true;
       var errorMessage: string = "";
-  
-    //   if (newCodeType.ShortCode === "") {
-    //     errorMessage = "Please Enter Shortcode";
-    //     isvalidData = false;
-    //   }
-    //   if (newCodeType.Description === "") {
-    //     if (errorMessage === "") errorMessage = "Please Enter Description";
-    //     else errorMessage = errorMessage + " and Description";
-    //     isvalidData = false;
-    //   }
-  
+      var defaultMessage:string ="Please enter "
+      errorMessage = RequiredValidation(leaddata.Name,"Lead Name");
+      errorMessage += RequiredValidation(leaddata.PhNumber,"Phone Number");
+      errorMessage += RequiredValidation(leaddata.Criteria,"Criteria");
+      errorMessage += RequiredValidation(leaddata.Budget,"Budget");
+      if(errorMessage.length>1)
+      {
+        isvalidData = false;
+      }
+      
       if (!isvalidData) {
-        ErrorToaser(errorMessage);
+        ErrorToaser(defaultMessage+ errorMessage.slice(0,errorMessage.length-1));
       }
   
       return isvalidData;
@@ -129,10 +127,10 @@ import { Dropdown } from "primereact/dropdown";
     };
 
 
-    const handleValueChange = (valueAsNumber: number) => {
+    const handleValueChange = (e:InputNumberValueChangeEvent) => {
       setNewLeadData((previousdata) => ({
         ...previousdata,
-        ["Budget"]: valueAsNumber,
+        [e.target.id]: e.value,
       }));
   };
 
@@ -163,19 +161,29 @@ import { Dropdown } from "primereact/dropdown";
                 placeholder="Enter Phone Number"
                 onChange={onChange}
                 value={leaddata.PhNumber}
+                minLength={10}
+                maxLength={13}
                 required
                 
               />
             </FormGroup>
 
             <FormGroup label="Budget" labelFor="text-input" labelInfo="*">
-              <NumericInput
+              
+            <InputNumber 
+            value={leaddata.Budget} 
+            id="Budget"
+            onValueChange={(e) => handleValueChange(e)}  
+            mode="decimal"
+             />
+ 
+              {/* <NumericInput
                 id="Budget"
                 placeholder="Enter budget"
                 onValueChange={handleValueChange}
                 value={leaddata.Budget}
                 required
-              />
+              /> */}
             </FormGroup>
 
             <FormGroup label="Criteria" labelFor="numeric-input" labelInfo="*">
