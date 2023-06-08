@@ -4,6 +4,16 @@ export interface Leads{
          PhNumber :number|any,
          Budget :number,
          Criteria :string,
-         LeadStatus :string,         
+         LeadStatus :string,
+         UserId:number
         //  int? Facility 
 }
+
+export const newLeaddata = {    LeadId :0,
+        Name :"",
+        PhNumber :"",
+        Budget :0,
+        Criteria :"",
+        LeadStatus :"",  
+        UserId:0      
+      };

@@ -19,27 +19,34 @@ import {
   ErrorToaser,
   SuccessToaser,
 } from "../CommonComponents/Toast";
-import { ctvRelative, leadRelative } from "../CommonComponents/ApplicationConstants";
+import { ctvRelative, leadRelative, userRelative } from "../CommonComponents/ApplicationConstants";
 import { GetData, PutData } from "../CommonComponents/APICalls";
 import { newCodetypedata } from "../CodeTypeValues/CodeTypeValues";
 import { Dropdown } from "primereact/dropdown";
 import { RequiredValidation } from "../CommonComponents/Validation";
 import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
+import { user } from "../Users/User";
+import { newLeaddata } from "./Leads";
 
 const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
   (props , ref) => {
     useImperativeHandle(ref, () => ({
       Action() {        
         {
-          const currentStatus = leadStatus.find((x)=>x.description===props.codeTypes.leadStatus)
+          const currentStatus = leadStatus.find((x)=>x.shortCode===props.codeTypes.leadStatus)
           const currentLeadStatus = (currentStatus)?currentStatus:newCodetypedata
+          const selectedUser = users.find(x=>x.Id === newLeaddata.UserId);
+          const selectedLeadUser = (selectedUser)?selectedUser:user
+
           newLeaddata.LeadId= props.codeTypes.leadId;
           newLeaddata.Name =props.codeTypes.name;
           newLeaddata.PhNumber =props.codeTypes.phNumber;
           newLeaddata.Budget =props.codeTypes.budget;
           newLeaddata.Criteria =props.codeTypes.criteria;
+          newLeaddata.UserId = props.codeTypes.UserId
           
           setSelectedLeadStatus(currentLeadStatus);
+          setSelectedUser(selectedLeadUser);
           // newLeaddata.PreviousSchedule=props.codeTypes.previousSchedule;
           // newLeaddata.NextSchedule =props.codeTypes.nextSchedule;
         };
@@ -50,30 +57,40 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
       },
     }));
 
-    const newLeaddata = {    LeadId :0,
-        Name :"",
-        PhNumber :"",
-        Budget :0,
-        Criteria :"",
-        LeadStatus :"",        
-      };
+    // const newLeaddata = {    LeadId :0,
+    //     Name :"",
+    //     PhNumber :"",
+    //     Budget :0,
+    //     Criteria :"",
+    //     LeadStatus :"",        
+    //   };
 
       const codeTypeList = [
         newCodetypedata
+      ]
+      const usersList = [
+        user
       ]
       const apiProps ={apiUrl: ctvRelative+ "/LEAD_STATUS"}
     const [ispopupOpen, setIspopupOpen] = useState(false);
     const [newLead, setnewLead] = useState(newLeaddata);
     const [selectedLeadStatus, setSelectedLeadStatus] = useState(newCodetypedata);
-    const [leadStatus,setLeadStatuses] =useState(codeTypeList);
+    const [leadStatus,setLeadStatuses] =useState(codeTypeList);    
+    const [selectedUser, setSelectedUser] = useState(user);
+    const userProps = {apiUrl:userRelative}
+    const [users, setUsers] = useState(usersList);
 
     const Initialize = (props: ParentChildHandlerProps) => {
-      const resp = GetData(apiProps);
-      
+      const resp = GetData(apiProps);      
       resp.then((response)=>setLeadStatuses(response))
+            
+      const userResp = GetData(userProps);      
+      userResp.then((response)=>setUsers(response))
       
       setIspopupOpen(true);
     };
+
+    
 
     const handleValueChange = (e:InputNumberValueChangeEvent) => {
       setnewLead((previousdata) => ({
@@ -132,9 +149,9 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
          Budget :newLead.Budget,
          Criteria :newLead.Criteria,
          LeadStatus :selectedLeadStatus.shortCode,
+         UserId:selectedUser.Id
       };  
 
-      console.log(selectedLeadStatus.shortCode)
       console.log(ctv)
 
       const putParam = {postParam:ctv}
@@ -225,26 +242,17 @@ const EditLead = forwardRef<ParentToChildHandler, ParentChildHandlerProps>(
                 required
               />
             </FormGroup> */}
-            {/* <FormGroup label="Previous Schedule" labelFor="text-input" labelInfo="*">
-              <InputGroup
-                id="PreviousSchedule"
-                onChange={onChange}
-                value={newLead.PreviousSchedule}
-                required
-                disabled
-                
-              />
-            </FormGroup>
-            <FormGroup label="Next Schedule" labelFor="text-input" labelInfo="*">
-              <InputGroup
-                id="NextSchedule"
-                placeholder="Please define schedule"
-                onChange={onChange}
-                value={newLead.NextSchedule}
-                required
-                disabled
-              />
-            </FormGroup> */}
+            <FormGroup label="Assigned User" labelFor="text-input" labelInfo="*">
+            <Dropdown 
+                  id="AssignedUser"
+                  value={selectedUser}
+                  onChange={(e) => setSelectedUser(e.value)}
+                  options={users}
+                  optionLabel="email"
+                  placeholder="Select User"
+                  
+                />
+            </FormGroup>            
           </DialogBody>
           <DialogFooter
             actions={

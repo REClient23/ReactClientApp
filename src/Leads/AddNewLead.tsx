@@ -4,9 +4,7 @@ import {
     DialogBody,
     DialogFooter,
     FormGroup,
-    InputGroup,  
-    NumericInput
-  } from "@blueprintjs/core";
+    InputGroup  } from "@blueprintjs/core";
   import React, { forwardRef, useImperativeHandle, useState } from "react";
   import {
     ParentToChildHandler,
@@ -16,12 +14,14 @@ import {
     ErrorToaser,
     SuccessToaser,
   } from "../CommonComponents/Toast";
-  import { ctvRelative, leadRelative } from "../CommonComponents/ApplicationConstants";
+  import { ctvRelative, leadRelative, userRelative } from "../CommonComponents/ApplicationConstants";
 import { GetData, PostData } from "../CommonComponents/APICalls";
 import { newCodetypedata } from "../CodeTypeValues/CodeTypeValues";        
 import { Dropdown } from "primereact/dropdown";
 import { RequiredValidation } from "../CommonComponents/Validation";
 import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber';
+import { user } from "../Users/User";
+import { User } from "@blueprintjs/icons/lib/esm/generated-icons/16px/paths";
   const AddNewLeadValues = forwardRef<
     ParentToChildHandler,
     ParentChildHandlerProps
@@ -40,27 +40,37 @@ import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber
         Budget :0,
         Criteria :"",
         LeadStatus :"",
-        // PreviousSchedule:"" ,
-        // NextSchedule : new Date() 
+        UserId:0
       };
     const [ispopupOpen, setIspopupOpen] = useState(false);
     const [leaddata, setNewLeadData] = useState(newLeaddata);
     const [selectedLeadStatus, setSelectedLeadStatus] = useState(newCodetypedata);
+    const [selectedUser, setSelectedUser] = useState(user);
+    
     
     const codeTypeList = [
       newCodetypedata
     ]
+    const usersList = [
+      user
+    ]
     const apiProps ={apiUrl: ctvRelative+ "/LEAD_STATUS"}
+    const userProps = {apiUrl:userRelative}
 
     const Initialize = () => {
       
-      const resp = GetData(apiProps);
-      
+      const resp = GetData(apiProps);      
       resp.then((response)=>setLeadStatuses(response))
+
+      const userResp = GetData(userProps);      
+      userResp.then((response)=>setUsers(response))
+
+      console.log(users)
+
       setIspopupOpen(true);
     };
     const [leadStatus,setLeadStatuses] =useState(codeTypeList);
-    
+    const [users, setUsers] = useState(usersList);
 
   
     const OnCloseHandler = () => {      
@@ -95,6 +105,7 @@ import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber
   
     function createPost() {
 
+      console.log(selectedUser)
        var ctv={
         LeadId: leaddata.LeadId,
         Name :leaddata.Name,
@@ -102,9 +113,10 @@ import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber
          Budget :leaddata.Budget,
          Criteria :leaddata.Criteria,
          LeadStatus :selectedLeadStatus.shortCode,
+         UserId : selectedUser.Id,
       };  
       console.log("Modified LeadData:")
-      console.log(ctv)     
+      console.log(ctv)
       const postParam = {postParam:ctv}
       const leadURL = {apiUrl:leadRelative}
       const result = PostData(leadURL,postParam)
@@ -203,6 +215,17 @@ import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber
                   options={leadStatus}
                   optionLabel="description"
                   placeholder="Select Lead Status Type"
+                  
+                />
+            </FormGroup>            
+            <FormGroup label="Assigned User" labelFor="text-input" labelInfo="*">
+            <Dropdown 
+                  id="AssignedUser"
+                  value={selectedUser}
+                  onChange={(e) => setSelectedUser(e.value)}
+                  options={users}
+                  optionLabel="email"
+                  placeholder="Select User"
                   
                 />
             </FormGroup>            

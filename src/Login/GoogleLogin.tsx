@@ -20,10 +20,11 @@ const GoogleLoginPage = (params: onLoginSuccess) => {
 
 dispatch({
       type: LOGIN,
-      payload: { active: true, username: (credata as any).name,Image:(credata as any).picture},
+      payload: { active: true
+        , username: (credata as any).name
+        ,Image:(credata as any).picture
+        ,emailId:(credata as any).emailId},
     });
-
-
   };
 
   const { state, dispatch } = useContext(AppContext);

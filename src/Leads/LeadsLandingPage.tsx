@@ -18,7 +18,7 @@ function LeadsLandingPage() {
   const deleteChildRef = useRef<ParentToChildHandler>(null);
   const editChildRef= useRef<ParentToChildHandler>(null);
   const [selectedRowData, setSelectedRowData] = useState<Leads>();
-  const leads: Leads = { PhNumber: "", LeadStatus: "",Name:"", Budget:0, Criteria:"",LeadId:0};
+  const leads: Leads = { PhNumber: "", LeadStatus: "",Name:"", Budget:0, Criteria:"",LeadId:0,UserId:0};
 
   const [columnDefs, setColumnDefs] = useState([
     { field: "leadId" },
@@ -27,6 +27,7 @@ function LeadsLandingPage() {
     { field: "budget" },
     { field: "criteria" },
     { field: "leadStatus" },
+    { field: "userId" },
     // { field: "previousSchedule" },
     // { field: "nextSchedule" },
   ]);
