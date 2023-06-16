@@ -164,7 +164,7 @@ function CodeTypeValueLandingPage() {
           OnAddClickHandler={OnAddClickHandler}
           OnEditClickHandler={onEditButtonClick}
           OnDeleteClickHandler={onDeleteButtonClick}
-          IsAddActionVisible={true}
+          ModuleName="CodeTypeValues"
         />
       </div>
       <div className="container-main">

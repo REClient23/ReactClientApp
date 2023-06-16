@@ -34,7 +34,7 @@ const AddNewProperty = forwardRef<
     },
   }));
 
-  const newPropertydata: Property = { propertyId: 0, pictures: "test" };
+  const newPropertydata: Property = { propertyId: 0};
   const [ispopupOpen, setIspopupOpen] = useState(false);
   const [newProperty, setNewProperty] = useState(newPropertydata);
   const [selectedPropertyType, setPropertyType] = useState<CodeTypeValues>();
@@ -416,6 +416,16 @@ const setDataSource=(shortCode:string,data:CodeTypeValues[])=>
               fill
             />
           </FormGroup>
+          <FormGroup label="Video ID" labelFor="text-input" labelInfo="*">
+            <InputGroup
+              id="pictures"
+              placeholder="Video ID"
+              onChange={onChange}
+              value={newProperty.pictures}
+              required
+            />
+          </FormGroup>    
+          
         </DialogBody>
         <DialogFooter
           actions={

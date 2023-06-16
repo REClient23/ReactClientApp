@@ -7,33 +7,34 @@ import { error } from "console";
 import { Button } from "@blueprintjs/core";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import { IconName } from "@blueprintjs/icons";
-import CustomToolBar from "../CommonComponents/CustomToolBar";
-import { appBaseURL } from "../CommonComponents/ApplicationConstants";
-import AddNewCodeType from "./AddNewCodeType";
+import CustomToolBar from "../../CommonComponents/CustomToolBar";
+import { appBaseURL } from "../../CommonComponents/ApplicationConstants";
+
 import {
   ParentToChildHandler,
   ParentChildHandlerProps,
-} from "../CommonComponents/ParentToChildHandler";
-import { CodeTypes } from "./CodeTypesInterface";
-import { ErrorToaser } from "../CommonComponents/Toast";
-import DeleteCodeType from "./DeleteCodeType";
-import EditCodeType from "./EditCodeType";
+} from "../../CommonComponents/ParentToChildHandler";
+import { CodeTypes } from "../../CodeTypes/CodeTypesInterface";
+import { ErrorToaser } from "../../CommonComponents/Toast";
+import DeleteCodeType from "../../CodeTypes/DeleteCodeType";
+import EditCodeType from "../../CodeTypes/EditCodeType";
+import AddNewCodeType from "../../CodeTypes/AddNewCodeType";
+import AssignRoles from "./AssignRoles";
+import { CodeTypeValues } from "../../CodeTypeValues/CodeTypeValues";
 
-export default function CodeTypesLandingPage() {
+export default function RoleManagementLandingPage() {
   
   const addChildRef = useRef<ParentToChildHandler>(null);
-  const deleteChildRef = useRef<ParentToChildHandler>(null);
-  const editChildRef= useRef<ParentToChildHandler>(null);
-  const [rowData, setRowData] = useState<CodeTypes[]>();
-  const [selectedRowData, setSelectedRowData] = useState<CodeTypes>();
-  const gridRef = useRef<AgGridReact<CodeTypes>>(null);
-  const newdata= useState<CodeTypes>();
+  const [rowData, setRowData] = useState<CodeTypeValues[]>();
+  const [selectedRowData, setSelectedRowData] = useState<CodeTypeValues>();
+  const gridRef = useRef<AgGridReact<CodeTypeValues>>(null);
+  const newdata= useState<CodeTypeValues>();
 
   function onSelectionChanged(event: any) {
     var selectedRows = event.api.getSelectedRows();
     if (selectedRows[0] != null) setSelectedRowData(selectedRows[0]);
     else{
-      const codetype: CodeTypes = { ShortCode: "", Description: "" };
+      const codetype: CodeTypeValues = {  shortCode: "", description: "",codeTypeShortCode:"", codeTypeDesc:"" };
       setSelectedRowData(codetype);
     }
      
@@ -58,23 +59,23 @@ export default function CodeTypesLandingPage() {
   };
 */
   const onDeleteButtonClick = () => {
-    if(selectedRowData === undefined || selectedRowData?.ShortCode==="")
+    if(selectedRowData === undefined || selectedRowData?.shortCode==="")
     {
       ErrorToaser("Please select a row to delete");
     }
     else
     {
-      deleteChildRef.current?.Action();
+      
     }
   };
   const onEditButtonClick = () => {
-    if( selectedRowData === undefined  || selectedRowData?.ShortCode==="")
+    if( selectedRowData === undefined  || selectedRowData?.shortCode==="")
     {
-      ErrorToaser("Please select a row to edit");
+      ErrorToaser("Please select a Role to add Permissions");
     }
     else
     {
-      editChildRef.current?.Action();
+      addChildRef.current?.Action();  
     }
   };
 
@@ -92,18 +93,28 @@ export default function CodeTypesLandingPage() {
     }),
     []
   );
-
-  const refreshData = () => {
-    fetch(appBaseURL + "/api/CodeTypes")
+  const refreshData = ()=>{
+    refreshDatactv("ROLES");
+  };
+  const refreshDatactv = (ctShortCode: any) => {
+    fetch(appBaseURL + "/api/CodeTypeValues/" + `${ctShortCode}`)
       .then((result) => result.json())
-      .then((rowData: CodeTypes[]) => setRowData(rowData));
-    //.catch((error) => console.log(error));
+      .then((subrowData: CodeTypeValues[]) => setRowData(subrowData))
+      .catch((error) => console.log(error));
   };
 
   useEffect(() => refreshData(), []);
 
   const OnAddClickHandler = () => {
-    addChildRef.current?.Action();
+    if( selectedRowData === undefined  || selectedRowData?.shortCode==="")
+    {
+      ErrorToaser("Please select a Role to add Permissions");
+    }
+    else
+    {
+      addChildRef.current?.Action();  
+    }
+    
   };
   function test(): void {
     throw new Error("Function not implemented.");
@@ -111,11 +122,11 @@ export default function CodeTypesLandingPage() {
   return (
     <div className="ag-theme-alpine" style={{ height: 900 }}>
       <CustomToolBar
-        HeaderText="Code Types"
+        HeaderText="Role Management"
         OnAddClickHandler={OnAddClickHandler}
         OnEditClickHandler={onEditButtonClick}
-        OnDeleteClickHandler={onDeleteButtonClick}
-        ModuleName="CodeTypes"
+        OnDeleteClickHandler={onDeleteButtonClick}        
+        ModuleName="RoleManagement"
       />
       <AgGridReact
         rowData={rowData}
@@ -124,9 +135,7 @@ export default function CodeTypesLandingPage() {
         onSelectionChanged={onSelectionChanged}
         rowSelection="single"
       />
-      <AddNewCodeType ref={addChildRef} OnRefreshHandler={refreshData}  codeTypes={selectedRowData} />
-      <DeleteCodeType ref={deleteChildRef} OnRefreshHandler={refreshData} codeTypes={selectedRowData} />
-      <EditCodeType ref={editChildRef} OnRefreshHandler={refreshData} codeTypes={selectedRowData} />
+      <AssignRoles ref={addChildRef} OnRefreshHandler={refreshData}  codeTypes={selectedRowData} />      
     </div>
   );
 }

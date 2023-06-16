@@ -18,11 +18,13 @@ import { Property } from "./Property";
 import { ErrorToaser } from "../CommonComponents/Toast";
 import DeleteProperty from "./DeleteProperty";
 import EditProperty from "./EditProperty";
+import ViewPropertyVideo from "./ViewPropertyVideo";
 
 export default function PropertyLandingPage() {
   const addChildRef = useRef<ParentToChildHandler>(null);
   const deleteChildRef = useRef<ParentToChildHandler>(null);
   const editChildRef = useRef<ParentToChildHandler>(null);
+  const videoChildRef = useRef<ParentToChildHandler>(null);
   const [rowData, setRowData] = useState<Property[]>();
   const [selectedRowData, setSelectedRowData] = useState<Property>();
   const gridRef = useRef<AgGridReact<Property>>(null);
@@ -67,6 +69,9 @@ export default function PropertyLandingPage() {
       deleteChildRef.current?.Action();
     }
   };
+  const onVideoButtonClick = () => {    
+      videoChildRef.current?.Action();    
+  };
   const onEditButtonClick = () => {
     if (selectedRowData === undefined || selectedRowData?.propertyId === 0) {
       ErrorToaser("Please select a row to edit");
@@ -75,14 +80,31 @@ export default function PropertyLandingPage() {
     }
   };
 
+  const ActionCellRenderer = (params: any) => {
+    if (params != null) {
+      return (
+        <div>
+          <Button
+            intent="primary"
+            icon="mobile-video"
+            onClick={onVideoButtonClick}
+            style={{ marginRight: "10px" }}
+          />
+        </div>
+      );
+    }
+    return <div></div>;
+  };
+
   const [columnDefs, setColumnDefs] = useState([
     { field: "propertyId" },
     { field: "propertyName" },
     { field: "propertyType" },
-    { field: "price" },    
+    { field: "price" },
     { field: "address" },
     { field: "facing" },
     { field: "propertyAge" },
+    { field: "pictures", headerName: 'Video' , minWidth: 50, cellRenderer: ActionCellRenderer },
     /*{ field: "amenities" },
     { field: "noOfCarParkings" },    
     { field: "furnishedStatus" },
@@ -98,10 +120,9 @@ export default function PropertyLandingPage() {
     { field: "noOfLifts" }
     */
   ]);
-
   const defaultColDef = useMemo(
     () => ({
-        width:300,
+      width: 300,
       sortable: true,
       flex: 1,
       filter: true,
@@ -115,7 +136,7 @@ export default function PropertyLandingPage() {
     fetch(appBaseURL + "/api/Property")
       .then((result) => result.json())
       .then((rowData: Property[]) => setRowData(rowData))
-    .catch((error) => console.log(error));
+      .catch((error) => console.log(error));
   };
 
   useEffect(() => refreshData(), []);
@@ -123,9 +144,7 @@ export default function PropertyLandingPage() {
   const OnAddClickHandler = () => {
     addChildRef.current?.Action();
   };
-  function test(): void {
-    throw new Error("Function not implemented.");
-  }
+
   return (
     <div className="ag-theme-alpine" style={{ height: 900 }}>
       <CustomToolBar
@@ -133,7 +152,7 @@ export default function PropertyLandingPage() {
         OnAddClickHandler={OnAddClickHandler}
         OnEditClickHandler={onEditButtonClick}
         OnDeleteClickHandler={onDeleteButtonClick}
-        IsAddActionVisible={true}
+        ModuleName="PROPERTY"
       />
       <AgGridReact
         rowData={rowData}
@@ -154,6 +173,11 @@ export default function PropertyLandingPage() {
       />
       <EditProperty
         ref={editChildRef}
+        OnRefreshHandler={refreshData}
+        codeTypes={selectedRowData}
+      />
+      <ViewPropertyVideo
+        ref={videoChildRef}
         OnRefreshHandler={refreshData}
         codeTypes={selectedRowData}
       />

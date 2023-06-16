@@ -75,7 +75,7 @@ import React, {
       if (rowData !== null) {
         const users = param.map(
           (data: any) =>
-            new TimelineEvent(data.createdDateTime, data.createdBy, data.scheduleNotes, data.scheduleType)
+            new TimelineEvent(data.scheduleTime, data.createdBy, data.scheduleNotes, data.scheduleType)
         );
         setRowData(users);
       }

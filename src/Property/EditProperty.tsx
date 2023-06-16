@@ -433,6 +433,16 @@ const presetDoorfacing =()=>{
               fill
             />
           </FormGroup>
+          <FormGroup label="Video ID" labelFor="text-input" labelInfo="*">
+            <InputGroup
+              id="pictures"
+              placeholder="Video ID"
+              onChange={onChange}
+              value={newProperty.pictures}
+              required
+            />
+          </FormGroup>    
+          
         </DialogBody>
         <DialogFooter
           actions={

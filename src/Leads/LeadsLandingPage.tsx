@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useContext } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -11,14 +11,16 @@ import EditLead from "./EditLead";
 import DeleteLeadValues from "./DeleteLeadValues";
 import AddNewLeadValues from "./AddNewLead";
 import { GetData } from "../CommonComponents/APICalls";
+import { AppContext } from "../States/AppProvider";
 function LeadsLandingPage() {
 
+  const { state } = useContext(AppContext);
   const [rowData, setRowData] = useState();
   const addChildRef = useRef<ParentToChildHandler>(null);
   const deleteChildRef = useRef<ParentToChildHandler>(null);
   const editChildRef= useRef<ParentToChildHandler>(null);
   const [selectedRowData, setSelectedRowData] = useState<Leads>();
-  const leads: Leads = { PhNumber: "", LeadStatus: "",Name:"", Budget:0, Criteria:"",LeadId:0,UserId:0};
+  const leads: Leads = { PhNumber: "", LeadStatus: "",Name:"", Budget:0, Criteria:"",LeadId:0,userId:0};
 
   const [columnDefs, setColumnDefs] = useState([
     { field: "leadId" },
@@ -42,7 +44,7 @@ function LeadsLandingPage() {
   );
 
   const refreshData = () => {
-    const apiCalls = {apiUrl:leadRelative}
+    const apiCalls = {apiUrl:leadRelative + `/${state.user.email}` + `/${state.user.role}`} 
     const resp = GetData(apiCalls);
     resp.then((response)=>setRowData(response));    
   };
@@ -56,7 +58,7 @@ function LeadsLandingPage() {
       setSelectedRowData(leads);
     }
     console.log("Selected row is:")
-     console.log(selectedRows[0])
+     console.log(selectedRowData)
   }
 
 
@@ -76,7 +78,7 @@ function LeadsLandingPage() {
       ErrorToaser("Please select a row to edit");
     }
     else
-    {
+    {      
       editChildRef.current?.Action();
     }
   };
@@ -94,7 +96,7 @@ function LeadsLandingPage() {
         OnAddClickHandler={OnAddClickHandler}
         OnEditClickHandler={onEditButtonClick}
         OnDeleteClickHandler={onDeleteButtonClick}
-        IsAddActionVisible={true}        
+        ModuleName="LEADS"      
       />
       <AgGridReact
         rowData={rowData}
