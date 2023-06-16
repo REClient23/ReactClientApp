@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/ReactClientApp/static/css/main.74a99057.css",
-    "main.js": "/ReactClientApp/static/js/main.c91da16e.js",
+    "main.js": "/ReactClientApp/static/js/main.c178ee78.js",
     "static/js/787.524da18d.chunk.js": "/ReactClientApp/static/js/787.524da18d.chunk.js",
     "static/media/primeicons.svg": "/ReactClientApp/static/media/primeicons.e1441b135b3ca9ad643c.svg",
     "static/media/primeicons.eot": "/ReactClientApp/static/media/primeicons.d44157bdfa026dc877af.eot",
@@ -11,11 +11,11 @@
     "static/media/color.png": "/ReactClientApp/static/media/color.6441e63a57ccc5105bad.png",
     "index.html": "/ReactClientApp/index.html",
     "main.74a99057.css.map": "/ReactClientApp/static/css/main.74a99057.css.map",
-    "main.c91da16e.js.map": "/ReactClientApp/static/js/main.c91da16e.js.map",
+    "main.c178ee78.js.map": "/ReactClientApp/static/js/main.c178ee78.js.map",
     "787.524da18d.chunk.js.map": "/ReactClientApp/static/js/787.524da18d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.74a99057.css",
-    "static/js/main.c91da16e.js"
+    "static/js/main.c178ee78.js"
   ]
 }
